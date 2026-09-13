@@ -414,12 +414,18 @@ echo "== F11. the skills lock and the guide generator over the lineage's eight s
 # consumer config (GENERATED from that table, never transcribed); the lifted
 # checker over its eight skills must print what its own prints, and the
 # lifted generator must find its two committed guides CURRENT byte for byte.
-a11="$(cd "$V" && python3 tools/checkskills.py -v 2>&1; echo "exit=$?")"
-b11="$(cd "$V" && "$BBH_HOME/bin/bbh" check-skills --config "$CFG" -v 2>&1; echo "exit=$?")"
+# (set +e; …) on EVERY capture that records its own exit (2026-09-13): these four
+# had none, so a stale guide made `--check` exit 1, the capture's subshell died
+# under the inherited errexit before `echo exit=`, and the assignment ended the
+# whole script — no FAIL line, no F2, no verdict, the reason lost with it (the
+# consumer's kept log showed 35 lines where a PASS has 40). F4/F6/F7/F10 were
+# already written this way; test_capture_status.sh now bars the shape.
+a11="$( (set +e; cd "$V" && python3 tools/checkskills.py -v 2>&1; echo "exit=$?") )"
+b11="$( (set +e; cd "$V" && "$BBH_HOME/bin/bbh" check-skills --config "$CFG" -v 2>&1; echo "exit=$?") )"
 if [ "$a11" = "$b11" ]; then ok "F11 check-skills -v: identical ($(printf '%s\n' "$a11" | grep -c 'rules defined') skills listed; $(printf '%s\n' "$a11" | grep -o 'ALL PASS ([^)]*)' | head -1))"
 else fail "F11 check-skills differs:"; printf '%s\n' "$a11" > "$T/a11.txt"; printf '%s\n' "$b11" > "$T/b11.txt"; diff "$T/a11.txt" "$T/b11.txt" | head -12 | sed 's/^/        /'; fi
-a11g="$(cd "$V" && python3 tools/gen_skill_guide.py --check 2>&1; echo "exit=$?")"
-b11g="$(cd "$V" && "$BBH_HOME/bin/bbh" skill-guide --config "$CFG" --check 2>&1; echo "exit=$?")"
+a11g="$( (set +e; cd "$V" && python3 tools/gen_skill_guide.py --check 2>&1; echo "exit=$?") )"
+b11g="$( (set +e; cd "$V" && "$BBH_HOME/bin/bbh" skill-guide --config "$CFG" --check 2>&1; echo "exit=$?") )"
 if [ "$a11g" = "$b11g" ] && printf '%s\n' "$b11g" | grep -q 'exit=0'; then ok "F11 skill-guide --check: identical, both guides CURRENT ($(printf '%s\n' "$b11g" | grep -c ' is current') guides)"
 else fail "F11 skill-guide differs or not current:"; printf '%s\n' "$a11g" > "$T/a11g.txt"; printf '%s\n' "$b11g" > "$T/b11g.txt"; diff "$T/a11g.txt" "$T/b11g.txt" | head -12 | sed 's/^/        /'; fi
 

@@ -49,6 +49,15 @@ example consumer's gates and the harness's own selftests pass it.
 `lib/sh/prologue.sh` offers `bbh_work`, `bbh_demand`, `bbh_skip`, `bbh_fail`,
 `bbh_absolutise` for gates that want them; nothing requires them.
 
+A capture that RECORDS its command's exit status runs the command inside
+`(set +e; …)` — `x="$( (set +e; cmd 2>&1; echo "exit=$?") )"`. Under errexit
+the capture's subshell inherits `-e`, so a failing command ends it before the
+`echo`, and the assignment then ends the whole script with its FAIL line and
+verdict unprinted: a red that does not say why (the fidelity test's F11 did
+exactly this on a stale consumer guide, 2026-09-13).
+`selftest/test_capture_status.sh` bars the unprotected shape in the harness's
+own scripts.
+
 ## 3. The header (line 2 is an API)
 
 **[BBH-18]** Line 1 is `#!/bin/sh`. Line 2 is `# <name>.sh — <claim>`, and the header
