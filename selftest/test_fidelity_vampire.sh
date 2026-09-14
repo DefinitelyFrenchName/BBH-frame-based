@@ -86,9 +86,25 @@ T="$(mktemp -d)"; trap 'rm -rf "$T"' EXIT INT TERM
 # F1 red this test showed three times (14z-149, 14z-150, 14z-151): when one
 # runner's stub gate straddled a second boundary and the other's did not, two
 # identical verdicts differed by one character.
-norm() { sed -E 's/ +[0-9]+s( |$)/ Ns\1/g; s/\(([0-9]+)s\)/(Ns)/g'; }
+# AND A SELECTION MADE BY THOSE DURATIONS IS NOT VERDICT TEXT EITHER (2026-09-14):
+# the controls readout's `(costliest controls: g Ns over n · …)` list is the top
+# three gates by summed whole seconds, ties by name, so which stub gates it names
+# and in what order follow the clock exactly as the figures do. Masking only the
+# figures went red once inside the lineage's 14z-155 close tier (`g_xhon · g_cfired
+# · g_xdied` against `g_cfired · g_xdied · g_xhon`) and green alone. On that line
+# each entry becomes `G Ns over N`: the entry COUNT and the entry FORMAT stay
+# compared, the picks and their order do not.
+norm() { sed -E 's/ +[0-9]+s( |$)/ Ns\1/g; s/\(([0-9]+)s\)/(Ns)/g; /costliest controls: /s/[A-Za-z0-9_.-]+ Ns over [0-9]+/G Ns over N/g'; }
 
 echo "== F1. both static runners over one synthetic fake repo =="
+# THE NORMALISER IS ITSELF CHECKED ([BBH-4]): the reordered pair must normalise
+# EQUAL — with a different gate picked, too — and a list of another length must not.
+_ta='  time:     gates 12s  controls 3s  wall 15s  (costliest controls: g_xhon 1s over 1 · g_cfired 0s over 1 · g_xdied 0s over 1)'
+_tb='  time:     gates 11s  controls 2s  wall 14s  (costliest controls: g_cfired 0s over 1 · g_xdied 0s over 1 · g_xref 1s over 1)'
+_tc='  time:     gates 11s  controls 2s  wall 14s  (costliest controls: g_cfired 0s over 1 · g_xdied 0s over 1)'
+if [ "$(printf '%s\n' "$_ta" | norm)" = "$(printf '%s\n' "$_tb" | norm)" ] && [ "$(printf '%s\n' "$_ta" | norm)" != "$(printf '%s\n' "$_tc" | norm)" ]; then
+    ok "F1: the normaliser masks the costliest list's picks and order, and still tells a three-entry list from a two-entry one"
+else fail "F1: the normaliser leaves the costliest list's picks or order compared, or no longer tells its length"; fi
 FR="$T/fake"; mkdir -p "$FR/tests/lib"; ln -s "$V/tests/run_all_static.sh" "$FR/tests/run_all_static.sh"
 # since the lineage's 14z-139 its static runner sources tests/lib/classify.sh relative to its repo,
 # and since its 14z-147 the classifier sources tests/lib/controls.sh beside it
