@@ -41,7 +41,10 @@
 #       Lua layer, the drivers and the recording tools on the real emulators).
 #   F11 the skills lock and the guide generator (H10): bbh check-skills -v with
 #       the lineage's GENERATED [skills] section == tools/checkskills.py -v over
-#       its eight skills; bbh skill-guide --check finds its two guides CURRENT.
+#       its eight skills; bbh skill-guide --check finds its two guides CURRENT;
+#       and on the RED path (ruled 2026-09-14) a copy of the guided skills' files
+#       with one guide hand-edited: both generators exit 1 on STALE with the same
+#       text, only each tool's own regenerate command masked.
 #   F2  (BBH_FIDELITY_F2=1) the lineage's whole portable tier through both
 #       runners, verdict columns diffed — never alongside another gate run
 #       in that tree.
@@ -428,6 +431,52 @@ a11g="$( (set +e; cd "$V" && python3 tools/gen_skill_guide.py --check 2>&1; echo
 b11g="$( (set +e; cd "$V" && "$BBH_HOME/bin/bbh" skill-guide --config "$CFG" --check 2>&1; echo "exit=$?") )"
 if [ "$a11g" = "$b11g" ] && printf '%s\n' "$b11g" | grep -q 'exit=0'; then ok "F11 skill-guide --check: identical, both guides CURRENT ($(printf '%s\n' "$b11g" | grep -c ' is current') guides)"
 else fail "F11 skill-guide differs or not current:"; printf '%s\n' "$a11g" > "$T/a11g.txt"; printf '%s\n' "$b11g" > "$T/b11g.txt"; diff "$T/a11g.txt" "$T/b11g.txt" | head -12 | sed 's/^/        /'; fi
+
+# THE RED PATH, REQUIRED TO MATCH (maintainer-ruled 2026-09-14: "Let's require them
+# to match. If and only if this raises issues, we'll reconsider."). Until then F11 had
+# only compared a CURRENT tree, and the one stale-guide red the consumer ever hit showed
+# the two lines differing. A copy of exactly the files the guided skills read — listed
+# from the consumer config, never hard-coded — with ONE guide hand-edited, so it is
+# STALE: both generators must exit 1, say STALE, and print the same text. ONE thing is
+# masked: the regenerate command each names for ITSELF (`tools/gen_skill_guide.py` in
+# the lineage, `bbh skill-guide` here), which is right for its own users and is not the
+# lifted logic. Everything else is compared as it is printed.
+S11="$T/f11_stale"
+if PYTHONPATH="$BBH_HOME/lib/py" python3 - "$CFG" "$V" "$S11" > "$T/s11.txt" 2>&1 <<'PY'
+import sys, shutil, pathlib
+from bbh import config as C
+cfg_path, src, dst = sys.argv[1], pathlib.Path(sys.argv[2]), pathlib.Path(sys.argv[3])
+cfg, _ = C.consumer(cfg_path, None)
+guided = list(C.get(cfg, "skills.guided", []) or [])
+files = []
+for p in guided:
+    skill = C.get(cfg, f"skill_{p}.path")
+    files += [skill, str(pathlib.Path(skill).parent / "GUIDE.md")] + list(C.get(cfg, f"skill_{p}.docs", []) or [])
+n = 0
+for rel in dict.fromkeys(files):
+    s = src / rel
+    if s.is_file():
+        (dst / rel).parent.mkdir(parents=True, exist_ok=True); shutil.copy(s, dst / rel); n += 1
+guide = dst / pathlib.Path(C.get(cfg, f"skill_{guided[-1]}.path")).parent / "GUIDE.md"
+guide.write_text(guide.read_text(encoding="utf-8") + "\nA line hand-added to the guide (the F11 red path).\n", encoding="utf-8")
+print(n, guided[-1], guide.relative_to(dst))
+PY
+then
+    read -r n11s p11s g11s < "$T/s11.txt"
+    a11s="$( (set +e; cd "$V" && python3 tools/gen_skill_guide.py --root "$S11" --check 2>&1; echo "exit=$?") )"
+    b11s="$( (set +e; cd "$V" && "$BBH_HOME/bin/bbh" skill-guide --config "$CFG" --root "$S11" --check 2>&1; echo "exit=$?") )"
+    m11() { sed -E 's#regenerate with (tools/gen_skill_guide\.py|bbh skill-guide) --prefix#regenerate with <its own generator> --prefix#'; }
+    ma11="$(printf '%s\n' "$a11s" | m11)"; mb11="$(printf '%s\n' "$b11s" | m11)"
+    if [ "$ma11" = "$mb11" ] && printf '%s\n' "$mb11" | grep -q '^exit=1$' && printf '%s\n' "$mb11" | grep -q "$g11s is STALE"; then
+        ok "F11 skill-guide red path: $g11s hand-edited in a copy of $n11s files — both exit 1 on STALE, text identical once each tool's own regenerate command is masked"
+    else
+        fail "F11 skill-guide red path differs (masked: each tool's own regenerate command only):"
+        printf '%s\n' "$ma11" > "$T/a11s.txt"; printf '%s\n' "$mb11" > "$T/b11s.txt"; diff "$T/a11s.txt" "$T/b11s.txt" | head -12 | sed 's/^/        /'
+        printf '%s\n' "$mb11" | grep -q '^exit=1$' || echo "        (the copy was not STALE for bbh — the red path was not reached)"
+    fi
+else
+    fail "F11 skill-guide red path: could not build the stale copy:"; sed 's/^/        /' "$T/s11.txt"
+fi
 
 echo "== F2. the lineage's portable tier through both runners (opt-in) =="
 if [ "${BBH_FIDELITY_F2:-0}" = 1 ]; then
