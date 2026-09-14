@@ -191,6 +191,10 @@ printf '%s' "$o11" | grep -qE "^  g_xhon +CONTROL" && fail "the honoured control
 printf '%s' "$o11" | grep -q 'executed: 4  honoured 1  lies 1  refused 1  died 1' \
     && ok "readout — executed 4, honoured 1, lies 1, refused 1, died 1" \
     || fail "executable readout wrong: $(printf '%s' "$o11" | grep 'executed:' || echo '(none)')"
+# where the time went (2026-09-14): printed only when controls were executed
+printf '%s' "$o11" | grep -qE '^  time:     gates [0-9]+s  controls [0-9]+s  wall [0-9]+s  \(costliest controls: g_x[a-z]+ [0-9]+s over 1' \
+    && ok "readout — where the time went: gates, controls, wall and the costliest controls" \
+    || fail "no time line after executed controls: $(printf '%s' "$o11" | grep 'time:' || echo '(none)')"
 printf '%s' "$o11" | grep -q 'PASS 4 .*SKIP 0 .*FAIL 3' \
     && ok "tally PASS 4  FAIL 3 — every gate passed its own run, three controls failed theirs" \
     || fail "wrong tally: $(printf '%s' "$o11" | grep -E '^PASS ' || echo '(none printed)')"
@@ -201,6 +205,8 @@ o11b="$(cd "$FR" && $RUN --tier portable --exec-controls none 2>&1)" && s11b=0 |
 [ "$s11b" = 0 ] && printf '%s' "$o11b" | grep -q 'PASS 4 .*FAIL 0' && printf '%s' "$o11b" | grep -q 'executed: (off' \
     && ok "control — with --exec-controls none the same four stubs are PASS 4 and the readout says off" \
     || fail "--exec-controls none still executed or failed something: $(printf '%s' "$o11b" | grep -E '^PASS |executed' || echo '(none)')"
+printf '%s' "$o11b" | grep -q '^  time:' && fail "--exec-controls none printed a time line" \
+    || ok "with --exec-controls none there is no time line"
 : > "$FR/tests/ci_portable.txt"; printf 'g_xlies\n' > "$FR/tests/ci_static.txt"
 o11c="$(cd "$FR" && FAKE_ROOT=. $RUN --tier static --exec-controls portable 2>&1)" && s11c=0 || s11c=$?
 [ "$s11c" = 0 ] && ok "--exec-controls portable does not execute a static-tier gate's controls" \

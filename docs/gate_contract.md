@@ -176,7 +176,10 @@ control after a PASS (`--exec-controls all|portable|none`, default `all`,
 because a lying control must not pass a pre-commit; `none` is the
 developer's iteration knob), printing a readout — `fired N / declared N`,
 the none and undeclared counts, `executed N honoured N lies N refused N
-died N` — only when the tier declared or executed anything, so a consumer
+died N` and, when controls ran, `time: gates Ns controls Ns wall Ns
+(costliest controls: …)` (added 2026-09-14: each control is timed, and the
+record dies with the run's temporary directory) — only when the tier declared
+or executed anything, so a consumer
 that has not adopted the grammar sees the runner it always had, byte for
 byte. `bbh run-sweep` reads every block on every run and executes under
 `--controls` (one more row per declared name, `<gate>@<name>`, PASS =

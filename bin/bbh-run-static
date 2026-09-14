@@ -126,6 +126,7 @@ failed=""; skipped=""
 # and the executable-control rows (gate, name, verdict, seconds)
 c_decl=0; c_fired=0; c_undecl=0; c_none=0
 x_ok=0; x_lies=0; x_refused=0; x_died=0
+t_gates=0; t_start=$(date +%s)   # where the time went (the controls readout)
 : > "$WORK/controls.tsv"
 
 # WORKING-TREE SNAPSHOT. This is the PRE-COMMIT command, so it must not leave
@@ -154,7 +155,7 @@ run_tier() {  # run_tier <label> <names>
         # this loop's input. Paid for once — a 32-entry run became 28 silently.
         "$GATES_DIR/$g.sh" </dev/null > "$WORK/$g.out" 2>&1 && _st=0 || _st=$?
         _t1=$(date +%s)
-        _dur=$((_t1 - _t0))
+        _dur=$((_t1 - _t0)); t_gates=$((t_gates + _dur))
         # the 4th argument is the gate SCRIPT: the classifier reads its
         # MUST-FIRE declarations against the log
         bbh_classify "$_st" "$WORK/$g.out" 58 "$GATES_DIR/$g.sh"
@@ -315,6 +316,18 @@ if [ "$EXEC_CTL" = none ]; then
 else
     echo "  executed: $_xn  honoured $x_ok  lies $x_lies  refused $x_refused  died $x_died  (--exec-controls $EXEC_CTL)"
     awk -F'\t' '$3 != "HONOURED" {printf "      %-30s %-24s %s\n", $1, $2, $3}' "$WORK/controls.tsv"
+    if [ "$_xn" -gt 0 ]; then
+        # WHERE THE TIME WENT (2026-09-14): every control is timed into
+        # controls.tsv, which the EXIT trap deletes — so print the gates' total,
+        # the controls' total, the tier's wall and the three gates whose controls
+        # cost most. Every figure is followed by a space or a closing text, never
+        # a comma, so the fidelity duration mask covers it on both runners.
+        _tc=$(awk -F'\t' '{s += $4} END {print s + 0}' "$WORK/controls.tsv")
+        _top=$(awk -F'\t' '{s[$1] += $4; n[$1]++} END {for (g in s) printf "%d\t%s\t%d\n", s[g], g, n[g]}' "$WORK/controls.tsv" \
+            | sort -t "$(printf '\t')" -k1,1nr -k2,2 | head -3 \
+            | awk -F'\t' '{printf "%s%s %ds over %d", (NR > 1 ? " · " : ""), $2, $1, $3}')
+        echo "  time:     gates ${t_gates}s  controls ${_tc}s  wall $(( $(date +%s) - t_start ))s  (costliest controls: $_top)"
+    fi
 fi
 fi
 
