@@ -104,7 +104,7 @@ guide_origin = "Project VAMPIRE SAVED — the full-roster Vampire Savior romhack
 
 [skill_VSP]
 path = ".claude/skills/vampire-saved-port/SKILL.md"
-docs = ["CLAUDE.md", "HANDOFF.md", "STATE.md", "docs/project/gotchas.md", "docs/game/gotchas.md", "docs/project/porting_code_regions.md", "docs/project/porting_sprite_lists.md", "docs/project/tenant_manifest.md", "docs/project/build_dir_triage.md", "docs/project/hardening_register.md", "docs/project/patch_index.md", "docs/project/cps2_wide.md", "docs/project/oracle_classes.md", "docs/project/gate_scoping_method.md"]
+docs = ["CLAUDE.md", "HANDOFF.md", "STATE.md", "docs/project/gotchas.md", "docs/game/gotchas.md", "docs/project/porting_code_regions.md", "docs/project/porting_sprite_lists.md", "docs/project/tenant_manifest.md", "docs/project/build_dir_triage.md", "docs/project/hardening_register.md", "docs/project/patch_index.md", "docs/project/cps2_wide.md", "docs/project/oracle_classes.md", "docs/project/gate_scoping_method.md", "docs/project/rule_checker.md"]
 logs = ["docs/project/gotchas.md", "docs/project/patch_notes.md", "docs/project/patch_index.md", "HANDOFF.md", "CLAUDE.md", "docs/project/oracle_classes.md", "STATE.md", "STATE_HISTORY.md", "docs/project/build_dir_triage_history.md", "HANDOFF_HISTORY.md"]
 forbid = []
 sections = [["STATE.md", "## STANDING PRINCIPLE", "## THE DEADNESS REGISTER"]]
