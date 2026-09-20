@@ -353,7 +353,16 @@ f9_pair header-defaults "python3 tools/audit_header_defaults.py" "$BBH_HOME/bin/
 f9_pair "gate-index --check" "python3 tools/gen_gate_index.py --check" "$BBH_HOME/bin/bbh gate-index --config $CFG --check"
 "$BBH_HOME/bin/bbh" gate-index --config "$CFG" --stdout > "$T/gi9.md" 2>/dev/null || true
 cmp -s "$T/gi9.md" "$V/docs/project/gate_index.md" && ok "F9 gate-index render: the regenerated index is byte-identical to the lineage's committed file" || fail "F9 gate-index render differs from the committed file"
-f9_pair provenance "sh tests/test_expectation_provenance.sh | sed -n '/^== 1\./,/^== 3\./p' | sed '\$d'" "$BBH_HOME/bin/bbh provenance --config $CFG"
+# The lineage side runs the gate to a FILE and exits with the GATE's status:
+# piping it through `sed` made `$?` sed's, which is always 0, so on a red tree
+# ours read exit=0 while the harness read exit=1 — a difference F9 reported as
+# a fidelity failure when the two tools in fact agreed (fixed 14z-171). There
+# is no portable `pipefail` here (this runs under `sh -c`), hence the file.
+# LIMIT, deliberate: the status covers the WHOLE gate while the compared text
+# is only its sections 1-3, so a red in a later section shows as an F9
+# difference. That is correct — F9's premise is a green lineage tree, and a red
+# one must be loud rather than silently equal.
+f9_pair provenance "sh tests/test_expectation_provenance.sh > $T/f9prov.raw 2>&1; _s=\$?; sed -n '/^== 1\./,/^== 3\./p' $T/f9prov.raw | sed '\$d'; exit \$_s" "$BBH_HOME/bin/bbh provenance --config $CFG"
 f9_pair ref-rot "sh tests/test_build_ref_rot.sh | sed '\$d' | sed '\$d'; exit 0" "$BBH_HOME/bin/bbh ref-rot --config $CFG; exit 0"
 f9_pair demand-after-trap "sh tests/test_demand_after_trap.sh >/dev/null; echo checked" "$BBH_HOME/bin/bbh demand-after-trap tests --lib lib --skip test_demand_after_trap.sh; echo checked"
 
