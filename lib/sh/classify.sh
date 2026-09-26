@@ -48,6 +48,11 @@ fi
 
 bbh_classify() {  # bbh_classify <exit-status> <logfile> [detail-width] [gate-script]
     _st="$1"; _log="$2"; _w="${3:-90}"; _gate="${4:-}"
+    # The controls reader runs only on a PASS below, so without this reset a FAIL / SKIP /
+    # TIMEOUT row kept the PREVIOUS gate's BBH_CTL_* — the runners re-added its fired/declared
+    # counts and took a FAIL's label from it. Lineage: VampireSaved GitHub #140 (14z-183).
+    BBH_CTL_VERDICT=""; BBH_CTL_DECLARED=0; BBH_CTL_FIRED=0; BBH_CTL_DEAD=0; BBH_CTL_UNDECLARED=0
+    BBH_CTL_MISSING=""; BBH_CTL_DETAIL=""
     _bbh_classify_base "$_st" "$_log" "$_w"
     [ "$BBH_VERDICT" = PASS ] && [ -n "$_gate" ] && [ -f "$_gate" ] || return 0
     command -v bbh_ctl_read >/dev/null 2>&1 || return 0

@@ -165,6 +165,23 @@ printf '%s' "$o10" | grep -q 'PASS 3 .*SKIP 0 .*FAIL 3' \
     || fail "wrong tally: $(printf '%s' "$o10" | grep -E '^PASS ' || echo '(none printed)')"
 [ "$s10" != 0 ] && ok "and the runner exits nonzero ($s10)" || fail "a dead control left the runner green"
 
+echo "== 10b. a NON-PASS gate after a declaring one adds nothing to the readout and keeps its own label =="
+# The reader runs only on a PASS, so a FAIL row used to keep the previous gate's BBH_CTL_*:
+# `g_cfired g_fail g_fail` read fired 3 / declared 3, `g_cnone g_fail` counted two
+# none-declaring gates, and a shell-crash stub after a controls-red gate took that gate's
+# detail as its label. Lineage: VampireSaved GitHub #140 (14z-183), the ticket's orders.
+printf 'g_cfired\ng_fail\ng_fail\ng_cnone\ng_fail\ng_cmissing\ng_shellcrash\n' > "$FR/tests/ci_portable.txt"
+o10b="$(cd "$FR" && $RUN --tier portable --exec-controls none 2>&1)" || true
+printf '%s' "$o10b" | grep -q 'read:     fired 1 / declared 2' \
+    && ok "fired 1 / declared 2 — only g_cfired's and g_cmissing's own declarations, none re-added after a FAIL" \
+    || fail "readout after a FAIL wrong: $(printf '%s' "$o10b" | grep 'read:' || echo '(none)')"
+printf '%s' "$o10b" | grep -q 'gates declaring none: 1;' \
+    && ok "one none-declaring gate, not re-counted by the FAIL after it" \
+    || fail "none count after a FAIL wrong: $(printf '%s' "$o10b" | grep 'read:' || echo '(none)')"
+printf '%s' "$o10b" | grep -qE '^  g_shellcrash +FAIL .*\(exit 0 after a shell error\)$' \
+    && ok "the shell-crash stub after a controls-red gate keeps its own label" \
+    || fail "label after a controls-red gate: $(printf '%s' "$o10b" | grep -E '^  g_shellcrash' || echo '(none)')"
+
 echo "== 11. the must-fire controls are EXECUTED: CONTROL=<name> must reach the gate's own FAIL =="
 # Four stubs: one honours the mode (FAIL under it), one LIES (stays green),
 # one REFUSES (declares a name it never reads), one DIES (a shell error under

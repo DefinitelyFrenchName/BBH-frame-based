@@ -148,7 +148,10 @@ mkx g_xhon  'echo "FAIL: the flipped input was caught"; exit 1'
 mkx g_xlies 'echo "PASS: nothing changed"; exit 0'
 mkx g_xref  'echo "REFUSED: CONTROL=flip is not a mode of this gate"; exit 3'
 mkx g_xdied 'echo "tests/g_xdied.sh: line 9: FOO: parameter not set"; exit 0'
-printf 'g_cfired\ng_cmissing\ng_cdead\ng_cghost\ng_cnone\ng_xhon\ng_xlies\ng_xref\ng_xdied\n' >> "$FR/tests/ci_portable.txt"
+# g_ffail (exit 1, no header) right AFTER a declaring gate: the lineage's GitHub #140 shape — before
+# the reset in both classifiers the FAIL row re-added g_cfired's counts (fired 6 / declared 8)
+mkc g_ffail 1 "# a failing stub" "FAIL: nope"
+printf 'g_cfired\ng_ffail\ng_cmissing\ng_cdead\ng_cghost\ng_cnone\ng_xhon\ng_xlies\ng_xref\ng_xdied\n' >> "$FR/tests/ci_portable.txt"
 (cd "$FR" && sh tests/run_all_static.sh --tier portable 2>&1; echo "exit=$?") | norm > "$T/a3.txt"
 (cd "$FR" && "$BBH_HOME/bin/bbh-run-static" --config bbh.toml --tier portable 2>&1; echo "exit=$?") | norm > "$T/b3.txt"
 # read: 7 declarations (three header stubs + four executable stubs; the ghost
