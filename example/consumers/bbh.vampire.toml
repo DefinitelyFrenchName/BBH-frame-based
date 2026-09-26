@@ -86,7 +86,7 @@ profile = "cps2"
 [inp]
 corpus_dir = "tests/inp"
 set = "vsavjw"
-build = "build/m3b_merged27"   # re-pointed 14z-170 (M19 #136 fixes freeze) <- m3b_merged26
+build = "build/m3b_merged28"   # re-pointed 14z-183 (M20 #157 freeze) <- m3b_merged27 (14z-170) <- m3b_merged26
 rompath_suffix = "/rompath"
 profile = "cps2w"
 mame_bin_default = "$HOME/.cache/vampire-saved/mame/cps2"
