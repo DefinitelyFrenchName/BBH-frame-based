@@ -113,6 +113,7 @@ defaults, and why it moves when the lineage moves (§5).
 | `selftest/` | the harness's own gates, `run.sh` + one `test_*.sh` per piece |
 | `skill/` | the consumer skill and its lock, `skills.toml` |
 | `docs/` | the anchored reference pages and their `_history.md` twins |
+| `.claude/` | DEV-ONLY, never part of the product: the agent definitions, the worker spec, the agent hooks copied from the lineage (`agent/`), and the maintainer-installed `settings.json` (§6) |
 
 The consumer config is found from `--config`, then `$BBH_CONFIG`, then `./bbh.toml`.
 
@@ -127,8 +128,9 @@ FAKE_ROOT=. ../bin/bbh run-sweep --scope all
 ../bin/bbh doctor --config bbh.toml
 ```
 
-**The standing selftest tally** is PASS 32 / SKIP 2 / FAIL 0, as last recorded
-green in `ca014d9`'s body (2026-09-26). The two standing SKIPs are
+**The standing selftest tally** is PASS 34 / SKIP 2 / FAIL 0. It was PASS 32
+as last recorded green in `ca014d9`'s body (2026-09-26); Phase A added
+`test_agent_defs` and `test_agent_hooks` on 2026-10-07. The two standing SKIPs are
 `test_fidelity_mame` (opt-in) and `test_rpl_lua` (no standalone `lua` on the
 host). Any other SKIP is a finding, not weather. This line is a FILED COUNT, so
 re-measure before quoting it. On 2026-10-07 at `57d5c5c` the selftest measured
@@ -203,32 +205,59 @@ whole portable tier — never beside another gate in that tree), and
   selftest at its standing tally, `check-skills` ALL PASS, `skill-guide --check`
   current, fidelity green when the lineage is present — and, for a fidelity-text
   change, bbh pushed BEFORE the lineage ([BBH-83]). A red, an extra SKIP or an
-  unresolved item leaves the commits local, and the close says so. Nothing in
-  THIS repository enforces that mechanically yet: see §6.
+  unresolved item leaves the commits local, and the close says so. No hook in
+  this repository enforces the push rule (ruling R1); the lineage's close does.
 
 ## 6. Agents
 
-The lineage's agent architecture (its GitHub #172: worker definitions, a spec
-template, deterministic hooks, a context-free rule-checker) is NOT installed here:
-there is no `.claude/` in this repository, so a session started here runs with
-none of the lineage's hooks. The equivalent is `docs/agents_scope.md`, **ACCEPTED
-by the maintainer 2026-10-07, NOT YET BUILT** (Phase A next). Until Phase A
-lands, these hold because they need no tooling:
+The lineage's agent architecture (its GitHub #172) is installed here as a DEV
+setup, Phase A of `docs/agents_scope.md` (accepted by the maintainer 2026-10-07).
+Everything under `.claude/` is a copy from the lineage at `dbaed3a0`, and each file
+names its source.
 
+- **Workers:** `.claude/agents/measurer.md` (runs numbered commands, returns
+  `FIG <name> = <value> <- C<n>`) and `reader.md` (returns verbatim quotes with
+  `path:line`). Both are driven ONLY by a spec written from `.claude/worker_spec.md`:
+  TASK (a question), INPUTS (pinned), COMMANDS, RETURN, MUST NOT, STOP. Call them
+  with NO `model` parameter; their definition is the cap of record.
+- **The rule-checker** (`.claude/agents/rule-checker.md`, pinned model,
+  `omitClaudeMd: true`) is spawned only with a packet that the LINEAGE's
+  `tools/rulecheck.py` prepared. The ledger is the lineage's, like the session
+  record (ruling 1). Hand its verdict to the maintainer verbatim.
+- **The hooks** (`.claude/agent/hooks/`): `pre_bash.py` denies a detached job
+  (`nohup`, `setsid`, `disown`, a trailing `&` with no `wait`) and a `pgrep`
+  waiter loop, so use `run_in_background` or Monitor. `pre_agent.py` denies:
+  - a model above Opus-class;
+  - a model on a defined worker;
+  - an undefined type with no model (`Explore` excepted);
+  - a worker prompt missing a spec heading.
+
+  Forks pass. A block binds the TASK at fault, never the session: redo the call in
+  the allowed form.
+- **The installation** is `.claude/settings.json`, written and changed ONLY by the
+  maintainer. It edit-locks itself, `.claude/agent/hooks/**` and
+  `.claude/agent/agentlib.py`. Agents may not create or edit it: an attempt on
+  2026-10-07 was refused as self-modification, which is the intended outcome.
+  Until it is installed, `selftest/test_agent_hooks.sh` is RED on its installation
+  check, and the hooks do not run.
+- **Gates:** `selftest/test_agent_defs.sh` (every definition states its caps) and
+  `selftest/test_agent_hooks.sh` (the hooks against their frozen fixture and
+  cases, and the installation). They are the only proof that the fail-open hooks
+  still decide anything.
+- **No push hook here** (ruling R1). The lineage's close binds bbh's push (§5).
+
+The rules that need no tooling hold everywhere:
 - Every figure you quote comes from a command run in THIS sitting. A figure from a
   subagent, an issue, an older note or this file is a FILED COUNT until re-derived.
-- No detached job (`nohup`, `setsid`, `disown`, a trailing `&`): use
-  `run_in_background` or Monitor, so its end wakes the session.
 - No agent at `max` effort, ever (lineage ruling 2026-09-29). The orchestrator is a
   plain session (lineage ruling: Opus 5.5 at effort High, 2026-09-25); a sitting on
   another model says so at its opener.
-- A worker task is written as a spec — TASK as a question, pinned INPUTS, numbered
-  COMMANDS, a RETURN of figures with their command — never as "confirm that X".
-- Hand the maintainer a checker's verdict verbatim, never summarised.
 
 ## 7. Do-nots
 
 - Do not hand-edit `GUIDE.md` or a generated gate index.
+- Do not create or edit `.claude/settings.json`, `.claude/agent/hooks/**` or
+  `.claude/agent/agentlib.py`; propose the change to the maintainer.
 - Do not carry a number forward; re-measure it (§6).
 - Do not put a lineage literal (game, build, board, `14z-`) into the skill.
 - Do not loosen a classifier, a threshold or an oracle class to turn a red green.

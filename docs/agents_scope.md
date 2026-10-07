@@ -1,6 +1,6 @@
 # The agent swarm for bbh — scope and proposal
 
-> **ACCEPTED 2026-10-07, NOT YET BUILT.** The maintainer, on reading it: *"The
+> **ACCEPTED 2026-10-07; PHASE A BUILT THE SAME DAY, except the settings install (the maintainer's act, §4).** The maintainer, on reading it: *"The
 > proposal is fine by me."* This is read as §6's open rulings R1–R7 taken as
 > recommended; any of them can still be overturned by name. This is a scope page,
 > not a reference page, so it carries no `**[BBH-N]**` anchor. Its rules move into
@@ -120,7 +120,7 @@ Everything above passes the extraction question. But bbh's own precedent for lif
 "infrastructure built on infrastructure" while bbh's usefulness is "still untested by a second consumer".
 Phase A therefore comes first: bbh's own `.claude/` is the SECOND instance that earns the lift.
 
-## 4. Phase A — bbh's own dev setup (proposed; nothing created)
+## 4. Phase A — bbh's own dev setup (BUILT 2026-10-07; the settings file awaits the maintainer)
 
 | file | what | source |
 |---|---|---|
@@ -128,15 +128,15 @@ Phase A therefore comes first: bbh's own `.claude/` is the SECOND instance that 
 | `.claude/agents/reader.md` | copy; spec path re-pointed | lineage `.claude/agents/reader.md` |
 | `.claude/agents/rule-checker.md` | copy, verbatim (pinned model id, `omitClaudeMd: true`) | lineage; driven by the LINEAGE's `tools/rulecheck.py`, because the session record and its ledger are the lineage's (ruling 1) |
 | `.claude/worker_spec.md` | the template; lineage-only notes cut | lineage `docs/project/worker_spec.md` |
-| `.claude/hooks/agentlib.py`, `pre_bash.py`, `pre_agent.py` | copies, each headed `Lineage: tools/agent/… @ dbaed3a0`; `TEMPLATE` re-pointed | lineage `tools/agent/` |
-| `.claude/settings.json` | the two hooks, plus `permissions.deny` on `Edit(.claude/settings.json)` and `Edit(.claude/hooks/**)` | lineage `.claude/settings.json` |
-| `selftest/test_agent_hooks.sh`, `test_agent_defs.sh` | ported with their must-fire controls | lineage `tests/` |
-| `CLAUDE.md` §6 | rewritten from "pending" to the rules in force | — |
+| `.claude/agent/agentlib.py`, `agent_defs.py`, `hooks/pre_bash.py`, `hooks/pre_agent.py` | copies in the lineage's own layout (R2 as amended), each carrying a `COPIED INTO bbh … @ dbaed3a0` paragraph; `TEMPLATE` re-pointed | lineage `tools/agent/` |
+| `.claude/settings.json` | the two hooks, plus `permissions.deny` on `Edit(.claude/settings.json)`, `Edit(.claude/agent/hooks/**)` and `Edit(.claude/agent/agentlib.py)`. **NOT WRITTEN:** the agent's attempt was refused as self-modification (2026-10-07), and the content is handed to the maintainer to install | lineage `.claude/settings.json` |
+| `selftest/test_agent_hooks.sh`, `test_agent_defs.sh`; `selftest/agent/c01_commands.jsonl`, `pre_agent_cases.py` | ported with their must-fire controls (7 and 4), plus one new control, `unwired-settings`. Push hook, ledger, hint and census not ported (R1) | lineage `tests/` |
+| `CLAUDE.md` §6 | rewritten to the rules in force | — |
 
 **Costs and edges:**
 - **Copy drift.** The copies and the lineage's can diverge silently until Phase B's F12 proves them equal. Each header names the lineage commit it was taken from, so `git diff <sha> HEAD -- tools/agent` in the lineage shows what moved.
 - **The settings file needs the maintainer.** It is maintainer-installed, as in the lineage, and an agent cannot edit it once the deny rule exists. The first install is the maintainer's act.
-- **The selftest tally moves.** Two new gates take it from 34 to 36 tests. Every place that quotes the tally is re-grepped ([BBH-8]).
+- **The selftest tally moves.** Two new gates take it from 34 to 36 tests, and the standing tally from PASS 32 to PASS 34. The only place that quoted it, `CLAUDE.md` §3, was found by grep and updated ([BBH-8]).
 - **No `sweep.py` or `transcript_gaps.py` in Phase A.** The close that runs them is the lineage's (ruling 1).
 
 ## 5. Phase B — the lift (proposed; after Phase A has run)
@@ -169,6 +169,7 @@ Phase A therefore comes first: bbh's own `.claude/` is the SECOND instance that 
   - Alternative: a bbh `pre_push.py` that denies `git push` unless a selftest run at HEAD recorded the standing tally. Declined for Phase A: it invents a ledger bbh does not have, and ruling 1 put the record in the lineage.
 - **R2 — Where the dev copies live.**
   - **Recommended:** `.claude/hooks/` and `.claude/worker_spec.md`. They sit outside every product directory, so no consumer mistakes them for bbh.
+  - **AMENDED AT BUILD (2026-10-07):** `.claude/agent/` in the lineage's own `tools/agent/` layout, with the fixtures in `selftest/agent/`. The copies then diff line for line against the lineage, the hooks' path arithmetic is unchanged, and F12 has less to bridge. Still outside every product directory.
   - Alternative: `tools/agent/` as in the lineage, which would add a fifth top-level kind of directory for one phase.
 - **R3 — Inherit the lineage's swarm rulings wholesale?**
   - **Recommended:** yes, cited by date: no `max`, orchestrator Opus 5.5 High, worker caps, forks allowed, verbatim checker output.
