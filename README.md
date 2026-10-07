@@ -9,6 +9,22 @@ is a hard fail") by asking of every piece: *would this still be true if the
 thing under test were not that ROM, not CPS-2, not even a game?* What
 survived is here; what did not stayed there.
 
+**Scope: FRAME-DRIVEN subjects only.** The pieces that judge the subject
+depend on frames:
+- the replay grammar (`<frame> <who>=<tokens>`);
+- the driver log (one `<frame> <hash>` line per frame);
+- the suite and the sweep;
+- every comparison class and the field comparator;
+- the Lua layer.
+
+The pieces around them have no notion of a frame: the classifier, the static
+runners, the tier classifier, the hygiene tools and the skills lock. They exist
+to serve the frame-driven pieces, and are not offered as a general harness.
+
+A subject that is not driven frame by frame is outside bbh. That covers a
+command-line tool, a build, a document set or a dataset. Its harness is a
+separate project that generalizes this one and is proved against it.
+
 ## What it gives a consumer project
 
 | piece | what it does |

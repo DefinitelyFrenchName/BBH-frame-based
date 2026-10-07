@@ -1,6 +1,6 @@
 ---
 name: blackbox-harness
-description: The operating discipline of a black-box test harness for any deterministic system under scripted input - an emulated board, a console, a simulator, a firmware image - as extracted into the blackbox-harness (bbh) repository. Hard rules for the gate contract, the driver contract, the oracle comparison classes and what may never loosen one, expectation and gate hygiene, config discipline, the instrument layer under a machine profile, and the fidelity contract that proves an extraction. Load before writing, running, freezing or reviewing any gate, driver, replay, expectation or config in a project that uses bbh, and before changing bbh itself. Board-agnostic, game-agnostic, project-agnostic.
+description: The operating discipline of a black-box test harness for any deterministic system driven FRAME BY FRAME under scripted input - an emulated board, a console, a simulator, a firmware image; frame-driven subjects only - as extracted into the blackbox-harness (bbh) repository. Hard rules for the gate contract, the driver contract, the oracle comparison classes and what may never loosen one, expectation and gate hygiene, config discipline, the instrument layer under a machine profile, and the fidelity contract that proves an extraction. Load before writing, running, freezing or reviewing any gate, driver, replay, expectation or config in a project that uses bbh, and before changing bbh itself. Board-agnostic, game-agnostic, project-agnostic.
 ---
 
 # The black-box harness discipline (level 0, project-agnostic)
