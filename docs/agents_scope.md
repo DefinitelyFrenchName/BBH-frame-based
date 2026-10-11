@@ -134,7 +134,7 @@ Phase A therefore comes first: bbh's own `.claude/` is the SECOND instance that 
 | `CLAUDE.md` §6 | rewritten to the rules in force | — |
 
 **Costs and edges:**
-- **Copy drift.** The copies and the lineage's can diverge silently until Phase B's F12 proves them equal. Each header names the lineage commit it was taken from, so `git diff <sha> HEAD -- tools/agent` in the lineage shows what moved.
+- **Copy drift.** The copies and the lineage's can diverge silently until Phase B's F12 proves them equal. **Since 2026-10-11 the copies are bbh's own:** the lineage's later changes are not followed, and a change here is a bbh change. Each header names the lineage commit it was taken from, so `git diff <sha> HEAD -- tools/agent` in the lineage shows what moved.
 - **The settings file needs the maintainer.** It is maintainer-installed, as in the lineage, and an agent cannot edit it once the deny rule exists. The first install is the maintainer's act.
 - **The selftest tally moves.** Two new gates take it from 34 to 36 tests, and the standing tally from PASS 32 to PASS 34. The only place that quoted it, `CLAUDE.md` §3, was found by grep and updated ([BBH-8]).
 - **No `sweep.py` or `transcript_gaps.py` in Phase A.** The close that ran them was the lineage's (ruling 1). Since 2026-10-11 bbh has its own close, so whether it needs them is an open question, folded into R1's reopening.
@@ -153,12 +153,17 @@ Phase A therefore comes first: bbh's own `.claude/` is the SECOND instance that 
   - `push_gate` (a command whose exit 0 allows the push).
 
   Missing-key FATAL ([BBH-62]); every default goes into `docs/config.md` and, if ruled, the register.
-- **Fidelity F12.** The lineage's hooks and bbh's run over the lineage's own hook cases
+- **Fidelity F12.** ~~The lineage's hooks and bbh's run over the lineage's own hook cases
   (`tests/lib/pre_push_cases.py`, the `test_agent_hooks.sh` fixtures), and the verdict
-  text is diffed ([BBH-81]). After that, bbh's `.claude/settings.json` calls `bin/bbh agent-hook`,
+  text is diffed ([BBH-81]).~~ **AMENDED 2026-10-11 (proposal):** with the lineage
+  fidelity contract retired and the projects separate, F12 cannot run against the
+  lineage. It becomes an in-tree proof instead: the lifted `bbh agent-*` tools and
+  the Phase A copies under `.claude/agent/`, run over `selftest/agent/`'s fixture and
+  cases, verdict text diffed. After that, bbh's `.claude/settings.json` calls `bin/bbh agent-hook`,
   so bbh dogfoods its own product and the Phase A copies are deleted.
 - **F13, if ruled into bbh at all.** The rule-checker: `prepare` / `record` / `resolve`,
-  the paired plant, and the ledger.
+  the paired plant, and the ledger. Since 2026-10-11 it would be built in bbh, not
+  lifted against the lineage (see F12's amendment).
 - **A skill for the discipline.** Its own prefix (one candidate: `AGT`) and its own `[skill_AGT]` table, or rules
   folded into `BBH`. This is open (R6).
 
@@ -195,7 +200,7 @@ These are carried over from the lineage scope §7, because each still holds here
 
 These are new to bbh:
 - **A session started in the lineage that edits bbh.** It runs under the LINEAGE's hooks, not these, which is the same caps in Phase A.
-- **Copy drift before F12.** Nothing here catches it (§4).
+- **Copy drift before F12.** Nothing here catches it (§4). Since 2026-10-11 that is by design: the copies follow bbh, not the lineage.
 
 ## Appendix A — defects found while surveying (not fixed; FILED 2026-10-11 as #19, #20, #21, in this order)
 

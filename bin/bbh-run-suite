@@ -34,8 +34,9 @@
 #                    verdict (the summary says FILTERED)
 #
 # Lineage: VampireSaved's tests/run_suite.sh. EVERY PRINTED VERDICT LINE IS
-# THAT SCRIPT'S TEXT, character for character — fidelity F7 diffs the two
-# over the same expectation trees; the wording is frozen until H9.
+# THAT SCRIPT'S TEXT, character for character — fidelity F7 diffed the two
+# over the same expectation trees until the contract was retired
+# (2026-10-11, docs/conventions.md 8).
 # Config: [suite] replays_dir, expected_dir, registry, default_set, driver,
 # runs_per_replay, mask_env, mask_default, rompath_env, input_env,
 # hermetic_unset, hash_cmd (docs/config.md).

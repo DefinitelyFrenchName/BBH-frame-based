@@ -31,8 +31,9 @@ one `[skill_<PFX>]` table each (`path`, `docs`, `logs`, `forbid`, optional
 `sections` = [[file, "## Header", ...], ...] confining that file's anchors
 to named sections). Lineage: VampireSaved `tools/checkskills.py` (14z-114;
 table-driven per prefix since then; level 0 added 14z-134), moved with its
-logic and every message intact — fidelity F11 diffs the two over the
-lineage's eight skills. The extractors are negative-controlled on synthetic
+logic and every message intact — fidelity F11 diffed the two over the
+lineage's eight skills until the contract was retired (2026-10-11,
+docs/conventions.md 8). The extractors are negative-controlled on synthetic
 content every run. ROM-free, instrument-free.
 """
 import argparse

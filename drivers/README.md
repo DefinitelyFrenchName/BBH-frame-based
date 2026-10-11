@@ -1,8 +1,8 @@
 # The driver contract — how the suite drives a machine
 
 **[BBH-25]** A DRIVER runs one replay on one machine and writes one checksum log. The
-suite runner (`bbh run-suite`), the comparators and the fidelity checks
-never know which machine is behind it; they know this contract. Every
+suite runner (`bbh run-suite`) and the comparators never know which
+machine is behind it; they know this contract. Every
 driver in this directory — and any a consumer writes — has the same four
 arguments, honours the same environment, and writes the same grammar.
 
@@ -97,6 +97,6 @@ Ground truth: `selftest/test_driver_contract.sh` exercises every row of
 control of the integrity assertion; `selftest/test_mame_drivers.sh` the sh
 half of the three real drivers against a STUB emulator (every refusal,
 every path made absolute, every isolation flag, the stale-artifact rule,
-the exit codes); fidelity F8 (`selftest/test_fidelity_mame.sh`, opt-in)
-the Lua half on the real emulators — the lineage's driver and `mame.sh`
-produce byte-identical logs.
+the exit codes). Fidelity F8 (`selftest/test_fidelity_mame.sh`, opt-in)
+held the Lua half on the real emulators, the lineage's driver and `mame.sh`
+producing byte-identical logs, until the contract was retired (retired 2026-10-11, `docs/conventions.md` 8).

@@ -24,7 +24,7 @@ each replay (`== <path>`, one `<frame> who=tok …` line per held frame in
 file order, `last <n>`; or `ERROR <message>`) — the text
 lua/mame/rpl_dump.lua prints through rpl_parse.lua, so the two grammars
 can be diffed (selftest/test_rpl_lua.sh under a standalone lua; fidelity F8
-under MAME). Error texts follow the lineage's replay.lua assertions so a
+under MAME until the contract was retired, 2026-10-11, docs/conventions.md 8). Error texts follow the lineage's replay.lua assertions so a
 replay rejected by one side is rejected by the other for the same reason
 (a missing side reads `'nil'`, as Lua's tostring prints it).
 """

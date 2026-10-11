@@ -35,10 +35,13 @@ describe bbh, in a doc, a commit or a reply, as handling one.
 Within that scope, the harness is used DURING development, not only at release.
 Its core is a verdict on a system the reader cannot see inside.
 
-The extraction is PROVED, never asserted ([BBH-81]): `selftest/test_fidelity_vampire.sh`
-runs the lineage's own tools and bbh's over the same input and diffs the verdict
-text, rows F1–F11. That is why bbh still carries the lineage's build names as
-defaults, and why a lineage freeze can turn it red (§5).
+The extraction was PROVED, never asserted ([BBH-81]): `selftest/test_fidelity_vampire.sh`
+ran the lineage's own tools and bbh's over the same input and diffed the verdict
+text, rows F1–F11. **That contract is RETIRED** (maintainer, 2026-10-11:
+*"Retire it"*; `docs/conventions.md` 8). Once the lineage became a separate project
+and diverged on purpose, a live diff could only stay red. The tests are gone from
+the tree; their last text is at `505417b`. The lineage's build names stay as
+bbh's defaults, frozen at the M23 re-point, as dated literals ([BBH-70]).
 
 **Siblings:**
 - **The lineage** never consumes bbh (`docs/conventions.md` 6, [BBH-66]); its
@@ -46,7 +49,8 @@ defaults, and why a lineage freeze can turn it red (§5).
   a separate project: no commit, record or ruling crosses between the two.
 - **BBX** (`~/Developer/generalized-blackbox-harness/BBX`) generalizes bbh to any
   subject and uses bbh as its fidelity subject (`BBX_BBH_HOME`). A change here can
-  move BBX's fidelity rows: say so in the commit when it might.
+  move BBX's fidelity rows, and its F20 reads `example/consumers/bbh.vampire.toml`:
+  say so in the commit when a change might.
 
 ## 1. Read first
 
@@ -67,7 +71,7 @@ defaults, and why a lineage freeze can turn it red (§5).
 | provenance, header defaults, ref-rot, gate index, accounting, shadow tools | `docs/hygiene.md` |
 | a config key, its default, the TOML subset | `docs/config.md` |
 | the MAME Lua layer, a machine profile | `docs/lua.md` |
-| a fidelity row's text moved | `docs/rebaselines.md` |
+| what the retired fidelity contract re-baselined (a closed log) | `docs/rebaselines.md` |
 | the example consumer | `example/README.md` |
 
 ## 2. Hard rules (cited, not restated)
@@ -81,7 +85,8 @@ defaults, and why a lineage freeze can turn it red (§5).
   finding about the consumer — [BBH-24].
 - A replay moves to a looser oracle class only with a NEW MEASURED MECHANISM and
   the consumer's sign-off — [BBH-46].
-- **The fidelity contract's text is never changed silently** — [BBH-83]: a
+- **The fidelity contract** — [BBH-83], RETIRED for bbh on 2026-10-11 and kept
+  as the rule for any harness still bound to its original. While it stood: a
   verdict-text or classifier change lands on BOTH sides in one sitting, the moved
   rows re-baselined in the same commits, the HARNESS commit pushed FIRST, and a
   dated line in `docs/rebaselines.md` (its own commit, `rebaselines: …`).
@@ -127,27 +132,15 @@ FAKE_ROOT=. ../bin/bbh run-sweep --scope all
 ../bin/bbh doctor --config bbh.toml
 ```
 
-**The standing selftest tally** is PASS 34 / SKIP 2 / FAIL 0. It was PASS 32
-as last recorded green in `ca014d9`'s body (2026-09-26); Phase A added
-`test_agent_defs` and `test_agent_hooks` on 2026-10-07. The two standing SKIPs are
-`test_fidelity_mame` (opt-in) and `test_rpl_lua` (no standalone `lua` on the
-host). Any other SKIP is a finding, not weather. This line is a FILED COUNT, so
-re-measure before quoting it. On 2026-10-07 at `57d5c5c` the selftest measured
-PASS 31 / SKIP 2 / FAIL 1 in 326 s. The one red was fidelity F3b/F3c reading an
-orphan gate in the lineage's unpushed working tree: a lineage finding, not a bbh
-one ([BBH-24]).
+**The standing selftest tally** is PASS 33 / SKIP 1 / FAIL 0, over 34 tests
+(measured 2026-10-11 after the fidelity retirement: 175 s, GREEN). The one standing SKIP is
+`test_rpl_lua` (no standalone `lua` on the host). Any other SKIP is a finding,
+not weather. This line is a FILED COUNT, so re-measure before quoting it.
 
-`test_fidelity_vampire` reads the lineage's WORKING TREE, not a commit. So a red
-there is first a question about the lineage's state ([BBH-7]): check the lineage's
-`git status` and its newest commits before suspecting bbh.
-
-**Fidelity against the lineage** (`selftest/test_fidelity_vampire.sh`) finds the
-lineage through `example/consumers/bbh.vampire.toml`'s relative `[project].root`,
-or `BBH_FIDELITY_ROOT` (absolute) when set, and SKIPs if the tree is absent.
-Opt-in depth: `BBH_FIDELITY_F5=<N>` (every Nth masked spec; `1` = all),
-`BBH_FIDELITY_F6=all`, `BBH_FIDELITY_F7=all`, `BBH_FIDELITY_F2=1` (the lineage's
-whole portable tier — never beside another gate in that tree), and
-`BBH_MAME_FIDELITY=1` with `ROMDIR` for F8 on real emulators (`test_fidelity_mame.sh`).
+`selftest/test_rpl.sh` §4 and `test_rpl_lua.sh` §3 still parse the lineage's
+replays when its tree sits beside this one, located through the frozen
+`example/consumers/bbh.vampire.toml`. They are the last places bbh reads the
+lineage. A red there is first a question about the lineage's tree ([BBH-7]).
 
 ## 4. Generated and locked artifacts
 
@@ -201,32 +194,18 @@ supersedes the 2026-10-07 ruling that put bbh's session record in the lineage.
   `run-static`, `docs`, `README`, `rebaselines`, `consumer config`, `agents`.
   The body gives the cause, the fix, what is NOT claimed, and a `Verified:` line of
   tallies measured in that sitting: the selftest tally, `check-skills ALL PASS`,
-  `skill-guide --check current`, the fidelity verdict.
-- **The lineage is a fidelity INPUT, not a collaborator.** The fidelity test
-  reads its tree ([BBH-81], `docs/conventions.md` 6), and bbh carries its build
-  names as defaults. So when the lineage freezes a milestone and its current build
-  directories move one step, fidelity F4 goes red. The repair is a bbh re-point:
-  - one commit, `config: the M<N> re-point (lineage 14z-<S>) — …`;
-  - it touches four files: `lib/py/bbh/config.py` (the `[sweep]` placeholders and
-    the `[inp].build` default), `docs/config.md` (the documented `[inp].build`
-    default), `example/consumers/bbh.vampire.toml` (`[inp].build`, with its chained
-    re-pointed comment) and `selftest/test_fidelity_vampire.sh` (F6's sampled
-    build dirs);
-  - template: `git show 57d5c5c`.
+  `skill-guide --check current`.
+- **The lineage is history, not an input.** The fidelity contract is retired
+  (`docs/conventions.md` 8), so the re-point ritual has ended. The lineage's build
+  names in `lib/py/bbh/config.py` and in `example/consumers/bbh.vampire.toml` stay
+  at the M23 re-point. BBX's fidelity gate (its F20) still reads that toml, so it
+  stays in the tree.
 - **Push** when every check is green: the selftest at its standing tally,
-  `check-skills` ALL PASS, `skill-guide --check` current, and fidelity green when
-  the lineage is present. A red, an extra SKIP or an unresolved item leaves the
-  commits local, and the session's last message says so. One exception, and only
-  with the maintainer's word: a fidelity red caused by the LINEAGE moving, shown by
-  bbh's code (`bin lib lua drivers example`) being unchanged since a commit at
-  which fidelity was green. The commit body must name the failing rows and the
-  lineage change behind each. Precedent, 2026-10-11, with bbh unchanged since
-  `57d5c5c`:
-  - F1, the lineage classifier's new `(exit N)` CONTROL DIED text;
-  - F3a–F3c, its two unregistered `audit_release_linux_*` gates;
-  - F4, its ONDEMAND scope, from lineage `8904dde2`. No hook enforces the push rule here: R1's reason
-  (the lineage's close binds bbh's push) is gone, and a push gate is an open
-  question (`docs/agents_scope.md` R1).
+  `check-skills` ALL PASS, `skill-guide --check` current. A red, an extra SKIP or
+  an unresolved item leaves the commits local, and the session's last message says
+  so. No hook enforces the push rule here: R1's reason (the lineage's close binds
+  bbh's push) is gone, and a push gate is an open question
+  (`docs/agents_scope.md` R1).
 
 ## 6. Agents
 
@@ -282,7 +261,6 @@ The rules that need no tooling hold everywhere:
 - Do not carry a number forward; re-measure it (§6).
 - Do not put a lineage literal (game, build, board, `14z-`) into the skill.
 - Do not loosen a classifier, a threshold or an oracle class to turn a red green.
-- Do not change a fidelity row's text without the two-sided, loud re-baseline.
-- Do not make bbh depend on a consumer's tree; the lineage is a fidelity input,
-  never a runtime dependency ([BBH-85]: found by `$BBH_HOME`, never a submodule).
-- Do not push with a red, or with a SKIP beyond the two standing ones.
+- Do not make bbh depend on a consumer's tree, the lineage's included
+  ([BBH-85]: found by `$BBH_HOME`, never a submodule).
+- Do not push with a red, or with a SKIP beyond the standing one.

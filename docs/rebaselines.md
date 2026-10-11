@@ -1,9 +1,13 @@
 # Re-baselines — every time the fidelity contract's expected text moved
 
 One dated line per verdict-text or classifier change that re-baselined a
-fidelity row (`docs/conventions.md` 10). Newest first; the newest line is
+fidelity row (`docs/conventions.md` 8). Newest first; the newest line was
 printed at the head of every `selftest/test_fidelity_vampire.sh` run, so a
-re-baseline is never silent. The format is the line below: date, the rows,
+re-baseline was never silent.
+
+**CLOSED 2026-10-11:** the fidelity contract is retired (`docs/conventions.md`
+8), so no line will be added. This page stays as the log of what the contract
+re-baselined while it stood. The format is the line below: date, the rows,
 what moved and why, the two commits (harness first — it is pushed first).
 
 - 2026-09-25 F1: the classifier resets its controls-reader state at entry on both sides (the lineage's GitHub #140: a FAIL / SKIP / TIMEOUT row kept the previous gate's counts and label), and F1's declaring block gains `g_ffail`, a failing stub right after a declaring gate — the expected readout stays `fired 5 / declared 7` (it read 6 / 8 before the reset); harness and lineage commits of 14z-183.

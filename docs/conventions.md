@@ -19,7 +19,8 @@ default — `README.md` states it.)
    bump pushed ahead of the commit it names breaks every fresh clone's
    `git submodule update`). The harness is a test of the harness, not an
    instrument of any consumer's artifact, so it does not need pinning. The
-   cost that stays: the two repositories move TOGETHER — see 10.
+   cost that stayed, the two repositories moving TOGETHER under row 8, ended
+   with the fidelity contract's retirement (2026-10-11, row 8).
 
 3. **[BBH-86]** **Lifted comments keep their incident citations (`14z-N` session tags,
    `GitHub #N`) as history lines; no consumer's rule anchor travels.** Ruled
@@ -52,6 +53,10 @@ default — `README.md` states it.)
    author's, for a reason that was not fidelity. Deliberately NOT an
    environment override inside the config resolver: that would leak into
    every other config the same run opens (the fake repo of F1, the example).
+   **Amended 2026-10-11:** the fidelity test this row served is retired (row
+   8). The config stays here, frozen at the build names of the M23 re-point,
+   because BBX's fidelity gate (its F20) still reads it. No bbh gate reads it
+   as a fidelity input.
 
 7. **[BBH-82]** **ONE verdict classifier, `lib/sh/classify.sh`, the STRONGER of the two
    copies the lineage carried** (the timeout exits, exit 0 after the
@@ -70,6 +75,15 @@ default — `README.md` states it.)
    `docs/rebaselines.md`, whose newest line every fidelity run prints at
    its head. The maintainer's word: *"such a change needs to be loud though,
    I wouldn't want it to be silent."*
+   **RETIRED 2026-10-11.** The lineage became a separate project that no
+   longer moves with this one, and began diverging on purpose (a new
+   CONTROL DIED wording, a new sweep scope). Asked what bbh's fidelity test
+   should compare against, the maintainer answered *"Retire it"*.
+   `selftest/test_fidelity_vampire.sh` (F1-F11) and `test_fidelity_mame.sh`
+   (F8) are removed; their last text is readable in history at `505417b`.
+   `docs/rebaselines.md` is CLOSED and kept as the log of the contract's
+   life. The rule stands for any harness still bound to its original; bbh
+   is bound to none.
 
 9. **The docs stay LEAN and anchored; the complete LOG lives in
    `<name>_history.md` twins.** Ruled 2026-09-07 with decision 5 of the

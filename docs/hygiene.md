@@ -73,6 +73,7 @@ author knows which, so it is a triage worksheet, never a verdict.
 
 ## Fidelity
 
-`selftest/test_fidelity_vampire.sh` F9 runs each of these with the
+`selftest/test_fidelity_vampire.sh` F9 ran each of these with the
 lineage's consumer config against the lineage's own tools over the lineage
-tree, full stdout and exit status diffed: identical when they were lifted.
+tree, full stdout and exit status diffed: identical when they were lifted,
+and until the contract was retired (retired 2026-10-11, `docs/conventions.md` 8).

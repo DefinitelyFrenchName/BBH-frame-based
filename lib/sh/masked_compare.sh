@@ -8,7 +8,8 @@
 # dispatch when a second caller appeared (14z-97, GitHub #96 there); the
 # printed verdict lines are reproduced character-for-character on purpose —
 # that made the extraction verifiable by diffing suite output before and
-# after, and it is what this harness's fidelity check F5 diffs now.
+# after, and it is what this harness's fidelity check F5 diffed until the
+# contract was retired (2026-10-11, docs/conventions.md 8).
 #
 # WHY ONE COPY. A second copy of a comparison vocabulary does not stay a
 # copy: it stays at the vocabulary of the day it was written, which is how

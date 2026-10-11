@@ -40,7 +40,8 @@ KINDS (`[fingerprint].kind`):
 Lineage: VampireSaved's tools/build_fingerprint.py, which imported its
 board's decryption module ONLY for the member regex and hard-named the
 parent set; both are `[fingerprint]` config here. Every printed line is
-the lineage's text (fidelity F6 diffs them).
+the lineage's text (fidelity F6 diffed them until the contract was
+retired, 2026-10-11, docs/conventions.md 8).
 """
 
 import argparse

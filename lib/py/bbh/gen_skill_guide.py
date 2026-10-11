@@ -24,7 +24,8 @@ Which skills get a guide is `[skills].guided`; the guide's opening lines
 are `[skills].guide_header` (with `{title}`, `{name}` and `{origin}`
 substituted, `{origin}` from `[skills].guide_origin`) — the defaults are
 the lineage's exact lines, so its two committed guides regenerate
-byte-identical (fidelity F11). Lineage: VampireSaved
+byte-identical (fidelity F11, retired 2026-10-11, docs/conventions.md 8).
+Lineage: VampireSaved
 `tools/gen_skill_guide.py` (14z-134). ROM-free, instrument-free, ~0.1 s.
 """
 import argparse

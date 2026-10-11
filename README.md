@@ -56,7 +56,7 @@ for the wrong reason is a failure.
 ```sh
 git clone https://github.com/DefinitelyFrenchName/BBH-frame-based ~/Developer/blackbox-harness   # renamed 2026-09-10; the old name redirects
 cd ~/Developer/blackbox-harness
-bin/bbh selftest                      # the harness's own gates, ~6 min with the lineage tree present (350 s measured 2026-09-07; its fidelity checks SKIP without it, ~2 min); BBH_FIDELITY_F5=1: every masked spec, +3 min
+bin/bbh selftest                      # the harness's own gates (see CLAUDE.md §3 for the measured tally and time)
 cd example && ../bin/bbh run-static   # the example consumer, GREEN
 FAKE_ROOT=. ../bin/bbh run-static     # …with its static tier
 FAKE_ROOT=. FAKE_ROMPATH=roms/build-a ../bin/bbh run-suite   # the replay suite on a fake build (example/README.md)
@@ -104,8 +104,8 @@ lib/py/bbh/ config.py toml_subset.py tier.py demand_after_trap.py thresholds.py 
             compare_flicker.py compare_window.py compare_composite.py check_diverge.py describe_masked_shape.py
             gate_header.py gen_gate_index.py header_defaults.py ref_rot.py provenance.py compare_fields.py check_dumps.py
 drivers/    README.md (THE DRIVER CONTRACT), fake.sh, mame.sh, mame_guarded.sh, fbneo.sh
-selftest/   run.sh + test_*.sh (incl. test_fidelity_vampire.sh, the lineage fidelity checks F1/F3/F4/F5/F6/F7/F9/F10
-            and F2 opt-in, and test_fidelity_mame.sh, F8 on the real emulators — opt-in, BBH_MAME_FIDELITY=1)
+selftest/   run.sh + test_*.sh, one per piece (the lineage fidelity tests, F1-F11, were retired
+            2026-10-11: docs/conventions.md 8)
 example/    a complete tiny consumer: fakesys/ (the fake machine + ROM generator), roms/, replays/, expected/, tests/
             (+ consumers/ for real ones); tests/fields.tsv + g_fields.sh: the dual-implementation protocol on the fake
 skill/      blackbox-harness/{SKILL.md, GUIDE.md} — the agent-facing distillation of these docs ([BBH-1..91], locked by

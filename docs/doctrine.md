@@ -29,8 +29,9 @@ committed — "it should be equivalent" is not a test result. The lineage
 inherited this from an earlier project where systematic in-emulator
 verification was the difference between working and shipping. Mechanism:
 the harness's own gate chain (`selftest/run.sh`) is classified by the same
-classifier the runners use, and the fidelity checks re-run the lineage's
-tools beside this harness's on every change to a lifted piece.
+classifier the runners use, and, until the fidelity contract was retired
+(2026-10-11, `docs/conventions.md` 8), the fidelity checks re-ran the
+lineage's tools beside this harness's on every change to a lifted piece.
 
 **[BBH-3]** **Every in-instrument measurement becomes a rerunnable case.** A probe run
 during development — a measurement, a sanity check, a "let me just look" —
@@ -85,8 +86,9 @@ subsection beneath it. The procedure: grep the wording and its paraphrases
 across the whole tree, fix the header and the summary line first, keep
 the superseded text marked with what replaced it, re-grep and show the
 empty result. Mechanism: none can replace the grep; what the harness adds
-is that a stale claim about a VERDICT is loud — a re-baseline of the
-fidelity contract is a dated line every run prints (`docs/rebaselines.md`).
+is that a stale claim about a VERDICT is loud — while the fidelity
+contract stood, a re-baseline of it was a dated line every run printed
+(`docs/rebaselines.md`, closed with the contract on 2026-10-11).
 
 ## 3. The documentation convention (ruled by the lineage's maintainer, 2026-09-07)
 
@@ -111,9 +113,10 @@ never expected values re-derived by hand, never a re-implementation's
 opinion of what the answer should be. Where the original prints a number,
 the generic prints the same number in the same place, or the diff is not
 empty; a fidelity row that goes red names a change on one side that the
-other did not make. (`selftest/test_fidelity_vampire.sh` is the lineage's
-contract, F1-F11; `docs/rebaselines.md` is where its text is allowed to
-move, loudly.)
+other did not make. (`selftest/test_fidelity_vampire.sh` was the lineage's
+contract, F1-F11, retired on 2026-10-11 once the lineage became a separate
+project and diverged on purpose (`docs/conventions.md` 8). Its last text is
+in history at `505417b`; `docs/rebaselines.md` logs every move it made.)
 
 ## 5. What the doctrine is not
 

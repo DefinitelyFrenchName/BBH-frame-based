@@ -60,7 +60,8 @@
 # environment; %PLACEHOLDER% and %PLACEHOLDER<rompath_suffix-key>% expand to
 # the build set under test ([sweep.placeholders], each overridable by an
 # environment variable of the same name). EVERY PRINTED LINE IS THE LINEAGE'S
-# (fidelity F4 diffs --list and --dry-run against it); the project nouns in
+# (fidelity F4 diffed --list and --dry-run against it until the contract was
+# retired, 2026-10-11, docs/conventions.md 8); the project nouns in
 # them are config ([sweep], docs/config.md).
 set -eu
 BBH_HOME="${BBH_HOME:-$(cd "$(dirname "$0")/.." && pwd)}"; export BBH_HOME

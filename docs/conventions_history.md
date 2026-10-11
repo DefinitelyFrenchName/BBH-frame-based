@@ -4,6 +4,37 @@ The twin of `docs/conventions.md` (`docs/doctrine.md` §3): dated
 measurements, withdrawn drafts and the narrative behind each ruled
 default. Newest first. No anchor lives here.
 
+## 2026-10-11 — the fidelity contract retired; the lineage a separate project
+
+- **The rulings.** The maintainer, 2026-10-11: *"bbh is now its own project, with
+  no commits coming from Vampire Saved"*. Then, asked what bbh's fidelity test
+  should compare against once the lineage diverges on purpose, *"Retire it"*
+  (declined: pin a lineage commit, make it opt-in, keep tracking live). Rows 2, 6
+  and 8 of the register are amended in place.
+- **The measurement that prompted it.** `bin/bbh selftest` read PASS 33 / SKIP 2 /
+  FAIL 1 (362 s). Re-run alone against lineage `4980bd96`, a working tree with
+  uncommitted changes under `tests/`, `test_fidelity_vampire.sh` failed on:
+  - F1: the lineage classifier's new `(exit N)` CONTROL DIED wording, at its
+    `tests/lib/classify.sh:132`;
+  - F3a-F3c: two unregistered gates, `audit_release_linux_desktop` and
+    `audit_release_linux_cleanhost`;
+  - F4 `--list`: the lineage's ONDEMAND scope, from its `8904dde2`.
+
+  bbh's code (`bin lib lua drivers example`) was unchanged since `57d5c5c`, so
+  every red row was the lineage moving. The lineage had already deleted its own
+  `test_bbh_fidelity` gate (its `bf1f9ff9`, 2026-10-10).
+- **What went.** `selftest/test_fidelity_vampire.sh` (F1-F11, F2 opt-in) and
+  `selftest/test_fidelity_mame.sh` (F8, opt-in). Their last text is readable at
+  `505417b`. `docs/rebaselines.md` is closed. The re-point ritual ends: the lineage
+  build names in `lib/py/bbh/config.py` and in `example/consumers/bbh.vampire.toml`
+  stay at the M23 re-point.
+- **What stayed.** `example/consumers/bbh.vampire.toml`, because BBX's fidelity
+  gate (its F20) reads it. `selftest/test_rpl.sh` §4 and `test_rpl_lua.sh` §3 still
+  parse the lineage's replays when its tree is present. [BBH-81] and [BBH-83]
+  stand as rules for any harness bound to its original; the skill's rule lines
+  for [BBH-2], [BBH-25], [BBH-66], [BBH-73], [BBH-83] and [BBH-85] were reworded so
+  none describes the retired contract as live.
+
 ## 2026-09-07 — the eight defaults ruled
 
 - **The rulings.** The lineage's maintainer ruled on every default of its

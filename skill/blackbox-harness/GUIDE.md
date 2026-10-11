@@ -29,7 +29,7 @@ harness tree at load time.
 > a filing convention: they are the reason a consumer can adopt the harness
 > without inheriting the lineage's game.
 
-**[BBH-2]** **No untested change survives.** Every change to a gate, a driver, a comparator or an expectation is run through the harness before it is committed; "it should be equivalent" is not a test result. The harness's own gate chain is classified by the same classifier its runners use, and a change to any lifted piece re-runs the fidelity checks beside the originals.
+**[BBH-2]** **No untested change survives.** Every change to a gate, a driver, a comparator or an expectation is run through the harness before it is committed; "it should be equivalent" is not a test result. The harness's own gate chain is classified by the same classifier its runners use, and while a fidelity contract binds a lifted piece to its original, a change to it re-runs the fidelity checks beside the original.
 
 > **Incident** (`docs/doctrine.md` › *2. The seven sentences*):
 >
@@ -39,8 +39,9 @@ harness tree at load time.
 > inherited this from an earlier project where systematic in-emulator
 > verification was the difference between working and shipping. Mechanism:
 > the harness's own gate chain (`selftest/run.sh`) is classified by the same
-> classifier the runners use, and the fidelity checks re-run the lineage's
-> tools beside this harness's on every change to a lifted piece.
+> classifier the runners use, and, until the fidelity contract was retired
+> (2026-10-11, `docs/conventions.md` 8), the fidelity checks re-ran the
+> lineage's tools beside this harness's on every change to a lifted piece.
 
 **[BBH-3]** **Every in-instrument measurement becomes a rerunnable case before the session ends.** A probe, a sanity check, a "let me just look" is captured as a scripted gate; the suite only grows, and the registries' anti-orphan reports name every gate that exists and is registered nowhere.
 
@@ -119,8 +120,9 @@ harness tree at load time.
 > across the whole tree, fix the header and the summary line first, keep
 > the superseded text marked with what replaced it, re-grep and show the
 > empty result. Mechanism: none can replace the grep; what the harness adds
-> is that a stale claim about a VERDICT is loud — a re-baseline of the
-> fidelity contract is a dated line every run prints (`docs/rebaselines.md`).
+> is that a stale claim about a VERDICT is loud — while the fidelity
+> contract stood, a re-baseline of it was a dated line every run printed
+> (`docs/rebaselines.md`, closed with the contract on 2026-10-11).
 
 **[BBH-9]** **The docs stay LEAN and are searched by KEY; the complete LOG lives in `<name>_history.md` twins.** A reference page carries one rule per paragraph, anchored with a stable ID where a skill distils it; the dated measurements, superseded figures and incident narratives live in the page's twin, which carries no anchor and which the skills lock reads as a log. The page says what is true, the twin says how it came to be known, and nothing is deleted from either.
 
@@ -340,13 +342,13 @@ harness tree at load time.
 
 ## 3. The driver contract
 
-**[BBH-25]** **A driver has four arguments — `<set> <replay> <out.log> [sandbox]` — and the suite, the comparators and the fidelity checks know only that contract,** never which machine is behind it; a consumer's own driver fits the same shape or the suite cannot drive it.
+**[BBH-25]** **A driver has four arguments — `<set> <replay> <out.log> [sandbox]` — and the suite and the comparators know only that contract,** never which machine is behind it; a consumer's own driver fits the same shape or the suite cannot drive it.
 
 > **Incident** (`drivers/README.md` › *The driver contract — how the suite drives a machine*):
 >
 > A DRIVER runs one replay on one machine and writes one checksum log. The
-> suite runner (`bbh run-suite`), the comparators and the fidelity checks
-> never know which machine is behind it; they know this contract. Every
+> suite runner (`bbh run-suite`) and the comparators never know which
+> machine is behind it; they know this contract. Every
 > driver in this directory — and any a consumer writes — has the same four
 > arguments, honours the same environment, and writes the same grammar.
 
@@ -700,7 +702,7 @@ harness tree at load time.
 >
 > | `profile` | **none** | config | a name under `lua/mame/profiles/` (`cps2`, `cps2w`, or a consumer's own by path). `bbh run-suite` exports it as `BBH_PROFILE` when the caller has not set one; with neither, nothing is exported and a MAME driver REFUSES to run. There is deliberately no default: a board is never implied (the example omits the section — its fake driver needs none). The profile's keys are `docs/lua.md` and `lua/mame/profiles/TEMPLATE.lua` |
 
-**[BBH-66]** **A consumer config that lives outside the tree it describes carries ONE host's layout,** so the consumer's own gate passes its location as an input and the fidelity test derives a private config copy with that absolute root — never an environment override inside the resolver, which would leak into every other config the same run opens.
+**[BBH-66]** **A consumer config that lives outside the tree it describes carries ONE host's layout,** so the consumer's own gate passes its location as an input and the tool that reads it derives a private config copy with that absolute root — never an environment override inside the resolver, which would leak into every other config the same run opens.
 
 > **Incident** (`docs/conventions.md` › *Conventions — the harness's ruled defaults, and what each would cost to change*):
 >
@@ -714,6 +716,10 @@ harness tree at load time.
 >    author's, for a reason that was not fidelity. Deliberately NOT an
 >    environment override inside the config resolver: that would leak into
 >    every other config the same run opens (the fake repo of F1, the example).
+>    **Amended 2026-10-11:** the fidelity test this row served is retired (row
+>    8). The config stays here, frozen at the build names of the M23 re-point,
+>    because BBX's fidelity gate (its F20) still reads it. No bbh gate reads it
+>    as a fidelity input.
 
 **[BBH-67]** **Registry rows are written only at freeze time, as a build decision** — `sha1 <TAB> expectation-set <TAB> notes` — so an image the registry does not know is refused loudly rather than run against a guessed set.
 
@@ -765,7 +771,7 @@ harness tree at load time.
 >
 > | `crash.code = {lo, hi}` | guards | a ROM-plausible long: handler addresses, the STACK sketch. `cps2` (4 MB) and `cps2w` (6 MB) differ ONLY here — the lineage's two guards carried different values and drew different sketches of the same crash |
 
-**[BBH-73]** **One strict grammar, whose two copies are diffed:** a lenient parser that silently DROPS an unknown token is a malformed replay read as a shorter one; the Lua and the python parse of every replay are compared, under a standalone interpreter where one exists and under the machine's own interpreter in fidelity.
+**[BBH-73]** **One strict grammar, whose two copies are diffed:** a lenient parser that silently DROPS an unknown token is a malformed replay read as a shorter one; the Lua and the python parse of every replay are compared under a standalone interpreter, and where none exists the comparison SKIPs with its reason, because a skipped equality is not an equality.
 
 > **Incident** (`docs/lua.md` › *2. The grammar (`lua/mame/rpl_parse.lua` == `lib/py/bbh/rpl.py`)*):
 >
@@ -774,8 +780,9 @@ harness tree at load time.
 > replay now fails loudly, with the lineage's own error texts, on both
 > sides). Two copies of a grammar are the harness's own rot risk, so their
 > canonical parses are diffed: `selftest/test_rpl_lua.sh` under a standalone
-> `lua` (SKIP with the reason when none is present), and fidelity F8 under
-> MAME's own interpreter over every lineage replay — the production one.
+> `lua` (SKIP with the reason when none is present). Fidelity F8 also diffed
+> them under MAME's own interpreter over every lineage replay, the production
+> one, until the contract was retired (retired 2026-10-11, `docs/conventions.md` 8).
 > `lua/mame/rpl_dump.lua` and `bbh rpl dump` print that canonical text.
 
 **[BBH-74]** **Input staging is CANONICAL** — parse `held[frame]`, stage for the NEXT frame — so a frame number in any instrument's log is a replay frame number; ten instruments once staged one frame off because one variant was copied by every later file.
@@ -858,9 +865,10 @@ harness tree at load time.
 > opinion of what the answer should be. Where the original prints a number,
 > the generic prints the same number in the same place, or the diff is not
 > empty; a fidelity row that goes red names a change on one side that the
-> other did not make. (`selftest/test_fidelity_vampire.sh` is the lineage's
-> contract, F1-F11; `docs/rebaselines.md` is where its text is allowed to
-> move, loudly.)
+> other did not make. (`selftest/test_fidelity_vampire.sh` was the lineage's
+> contract, F1-F11, retired on 2026-10-11 once the lineage became a separate
+> project and diverged on purpose (`docs/conventions.md` 8). Its last text is
+> in history at `505417b`; `docs/rebaselines.md` logs every move it made.)
 
 **[BBH-82]** **The generic classifier is the STRONGER copy, and a consumer's delta against it is a FINDING about the consumer** — recorded, never a fidelity failure, and never fixed by weakening the classifier.
 
@@ -874,7 +882,7 @@ harness tree at load time.
 >    runners the same day, and F2 — the whole live portable tier through both
 >    static runners — measured identical (65 rows).
 
-**[BBH-83]** **A verdict-text or classifier change is never silent:** it lands on both sides in one sitting, the fidelity rows it moves re-baselined in the same commits, the harness's commit pushed before the consumer's, and a dated line in the re-baseline record — whose newest line every fidelity run prints at its head.
+**[BBH-83]** **While a fidelity contract binds a harness to its original, a verdict-text or classifier change is never silent:** it lands on both sides in one sitting, the fidelity rows it moves re-baselined in the same commits, the harness's commit pushed before the consumer's, and a dated line in the re-baseline record — whose newest line every fidelity run prints at its head.
 
 > **Incident** (`docs/conventions.md` › *Conventions — the harness's ruled defaults, and what each would cost to change*):
 >
@@ -887,6 +895,15 @@ harness tree at load time.
 >    `docs/rebaselines.md`, whose newest line every fidelity run prints at
 >    its head. The maintainer's word: *"such a change needs to be loud though,
 >    I wouldn't want it to be silent."*
+>    **RETIRED 2026-10-11.** The lineage became a separate project that no
+>    longer moves with this one, and began diverging on purpose (a new
+>    CONTROL DIED wording, a new sweep scope). Asked what bbh's fidelity test
+>    should compare against, the maintainer answered *"Retire it"*.
+>    `selftest/test_fidelity_vampire.sh` (F1-F11) and `test_fidelity_mame.sh`
+>    (F8) are removed; their last text is readable in history at `505417b`.
+>    `docs/rebaselines.md` is CLOSED and kept as the log of the contract's
+>    life. The rule stands for any harness still bound to its original; bbh
+>    is bound to none.
 
 **[BBH-84]** **A default that is not written down is a default nobody can veto:** the harness keeps a register of its ruled defaults — where it lives, what travels, which drivers, one classifier, the loud re-baseline rule — and a change to any row is a dated ruling, never a silent edit.
 
@@ -900,7 +917,7 @@ harness tree at load time.
 > row: GPL-3.0 is load-bearing on legal and use scope, not a technical
 > default — `README.md` states it.)
 
-**[BBH-85]** **The harness is found by an environment variable and never pinned as a submodule,** because it is a test of the harness and not an instrument of any consumer's artifact; the two repositories move TOGETHER instead, under the loud re-baseline rule.
+**[BBH-85]** **The harness is found by an environment variable and never pinned as a submodule,** because it is a test of the harness and not an instrument of any consumer's artifact; while a fidelity contract binds them, the two repositories move TOGETHER instead, under the loud re-baseline rule.
 
 > **Incident** (`docs/conventions.md` › *Conventions — the harness's ruled defaults, and what each would cost to change*):
 >
@@ -911,7 +928,8 @@ harness tree at load time.
 >    bump pushed ahead of the commit it names breaks every fresh clone's
 >    `git submodule update`). The harness is a test of the harness, not an
 >    instrument of any consumer's artifact, so it does not need pinning. The
->    cost that stays: the two repositories move TOGETHER — see 10.
+>    cost that stayed, the two repositories moving TOGETHER under row 8, ended
+>    with the fidelity contract's retirement (2026-10-11, row 8).
 
 **[BBH-86]** **Lifted comments keep their incident citations as history lines and carry no consumer's rule anchor;** a bare rule ID from another project dangles for a reader here and is worded in place.
 

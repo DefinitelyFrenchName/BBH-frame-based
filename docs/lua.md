@@ -5,9 +5,9 @@ It was lifted from Project VAMPIRE SAVED's `tests/lua/` by moving every
 literal about the BOARD into one table — the MACHINE PROFILE — and the
 replay grammar into one module. The scripts know a CPU tag, an address
 space, a RAM window, a port map and an exception-frame layout only through
-that table; the cps2 profile is proved by fidelity F8 (the lineage's driver
-and `drivers/mame.sh` produce byte-identical logs on the same replay), not
-by inspection.
+that table; the cps2 profile was proved by fidelity F8 (the lineage's driver
+and `drivers/mame.sh` produced byte-identical logs on the same replay), not
+by inspection, until the contract was retired (retired 2026-10-11, `docs/conventions.md` 8).
 
 ## 1. The machine profile (`lua/mame/profile.lua`, `profiles/*.lua`)
 
@@ -45,8 +45,9 @@ five lenient ones that silently DROPPED an unknown token — a malformed
 replay now fails loudly, with the lineage's own error texts, on both
 sides). Two copies of a grammar are the harness's own rot risk, so their
 canonical parses are diffed: `selftest/test_rpl_lua.sh` under a standalone
-`lua` (SKIP with the reason when none is present), and fidelity F8 under
-MAME's own interpreter over every lineage replay — the production one.
+`lua` (SKIP with the reason when none is present). Fidelity F8 also diffed
+them under MAME's own interpreter over every lineage replay, the production
+one, until the contract was retired (retired 2026-10-11, `docs/conventions.md` 8).
 `lua/mame/rpl_dump.lua` and `bbh rpl dump` print that canonical text.
 
 ## 3. The scripts

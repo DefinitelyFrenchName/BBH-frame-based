@@ -8,8 +8,16 @@
 # a private copy of this file with that absolute root.
 #
 # Every value below is the literal that project's runners carried. The
-# fidelity checks (harness_scope.md §5) diff this harness's verdict text
-# against that project's over the same input; an empty diff is the proof.
+# fidelity checks (harness_scope.md §5) diffed this harness's verdict text
+# against that project's over the same input; an empty diff was the proof.
+#
+# FROZEN 2026-10-11 (docs/conventions.md 6 and 8): the fidelity contract is
+# retired, the two projects are separate, and this file is no longer
+# re-pointed, and the lineage deleted the fidelity gate named above (its
+# bf1f9ff9, 2026-10-10). Its build names stay at the M23 re-point. It is kept because
+# BBX's fidelity gate (its F20) reads it; no bbh gate reads it as a fidelity
+# input. selftest/test_rpl.sh and test_rpl_lua.sh still read [project].root
+# to parse the lineage's replays when that tree is present.
 
 [project]
 root = "../../../Vampire_Saved/VampireSaved"
@@ -94,8 +102,9 @@ max_frames = 6000
 stop_after = 5
 
 # [skills] — the lineage's eight skills, GENERATED from tools/checkskills.py's
-# table (never hand-transcribed): fidelity F11 runs bbh check-skills with this
-# section over that tree and diffs against the lineage's own tool.
+# table (never hand-transcribed): fidelity F11 ran bbh check-skills with this
+# section over that tree and diffed against the lineage's own tool, until the
+# contract was retired (2026-10-11, docs/conventions.md 8).
 [skills]
 prefixes = ["VSP", "VSE", "MSC", "MSV", "CPH", "CPE", "MFI", "MJC"]
 history_exempt = ["STATE_HISTORY.md", "DECISIONS_HISTORY.md"]
