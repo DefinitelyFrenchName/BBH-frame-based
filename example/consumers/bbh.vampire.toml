@@ -15,9 +15,9 @@
 # retired, the two projects are separate, and this file is no longer
 # re-pointed, and the lineage deleted the fidelity gate named above (its
 # bf1f9ff9, 2026-10-10). Its build names stay at the M23 re-point. It is kept because
-# BBX's fidelity gate (its F20) reads it; no bbh gate reads it as a fidelity
-# input. selftest/test_rpl.sh and test_rpl_lua.sh still read [project].root
-# to parse the lineage's replays when that tree is present.
+# BBX's fidelity gate (its F20) reads it. No bbh gate reads it (the last two,
+# test_rpl.sh and test_rpl_lua.sh, stopped parsing the lineage's replays the
+# same day).
 
 [project]
 root = "../../../Vampire_Saved/VampireSaved"

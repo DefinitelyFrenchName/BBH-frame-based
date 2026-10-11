@@ -2,8 +2,10 @@
 # test_rpl_lua.sh — THE GRAMMAR EQUALITY CHECK: lua/mame/rpl_parse.lua and
 # lib/py/bbh/rpl.py are two copies of one grammar (the harness's own rot
 # class — a deleted mechanism on one side survives on the other), so their
-# canonical parses are diffed over the example's replays, every malformed
-# shape, and the lineage's replays when its tree is beside this one.
+# canonical parses are diffed over the example's replays and every malformed
+# shape. Until 2026-10-11 the lineage's replays were diffed too when its tree
+# sat beside this one (233 replays, 249694 lines on the last run); removed
+# when bbh became its own project (docs/conventions.md 8).
 # Needs a STANDALONE lua (lua / lua5.4 / lua5.3 / luajit): SKIPs with the
 # reason when none is present. Until 2026-10-11 the same comparison also ran
 # under MAME's own interpreter in fidelity F8, retired with the contract
@@ -37,15 +39,6 @@ for line in "abc p1=1" "10-5 p1=1" "0 wait" "100 p3=1" "100 p1=Z" "100 sys=S" "1
 done
 pair "malformed shapes" "$T"/m*.rpl
 grep -c '^ERROR' "$T/lua.txt" | grep -q '^9$' && ok "nine of ten rejected on both sides (the tenth is valid)" || fail "rejections: $(grep -c '^ERROR' "$T/lua.txt")"
-
-echo "== 3. the lineage's replays, when present =="
-V="$(python3 -m bbh.config "$BBH_HOME/example/consumers/bbh.vampire.toml" root 2>/dev/null || true)"
-if [ -n "$V" ] && [ -d "$V/tests/replays" ]; then
-    set -- "$V"/tests/replays/*.rpl "$V"/tests/replays/*/*.rpl
-    pair "the lineage's $# replays" "$@"
-else
-    echo "  (the lineage tree is not beside this one)"
-fi
 
 echo
 [ "$rc" = 0 ] && echo "PASS: rpl_parse.lua == rpl.py" || { echo "FAIL: see above"; exit 1; }

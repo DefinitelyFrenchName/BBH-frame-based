@@ -29,8 +29,12 @@ default. Newest first. No anchor lives here.
   build names in `lib/py/bbh/config.py` and in `example/consumers/bbh.vampire.toml`
   stay at the M23 re-point.
 - **What stayed.** `example/consumers/bbh.vampire.toml`, because BBX's fidelity
-  gate (its F20) reads it. `selftest/test_rpl.sh` §4 and `test_rpl_lua.sh` §3 still
-  parse the lineage's replays when its tree is present. [BBH-81] and [BBH-83]
+  gate (its F20) reads it. ~~`selftest/test_rpl.sh` §4 and `test_rpl_lua.sh` §3 still
+  parse the lineage's replays when its tree is present.~~ **Removed the same day**
+  (maintainer: *"remove them"*): they were the last reads of the lineage's tree.
+  `test_rpl_lua` §3 had diffed 233 lineage replays (249694 canonical lines) under
+  the newly installed `lua`, identical, on its last run; its corpus is now the
+  example's replays and the malformed shapes. [BBH-81] and [BBH-83]
   stand as rules for any harness bound to its original; the skill's rule lines
   for [BBH-2], [BBH-25], [BBH-66], [BBH-73], [BBH-83] and [BBH-85] were reworded so
   none describes the retired contract as live.

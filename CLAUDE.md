@@ -132,15 +132,14 @@ FAKE_ROOT=. ../bin/bbh run-sweep --scope all
 ../bin/bbh doctor --config bbh.toml
 ```
 
-**The standing selftest tally** is PASS 33 / SKIP 1 / FAIL 0, over 34 tests
-(measured 2026-10-11 after the fidelity retirement: 175 s, GREEN). The one standing SKIP is
-`test_rpl_lua` (no standalone `lua` on the host). Any other SKIP is a finding,
-not weather. This line is a FILED COUNT, so re-measure before quoting it.
+**The standing selftest tally** is PASS 34 / SKIP 0 / FAIL 0 over 34 tests
+(measured 2026-10-11 with a standalone lua 5.5.1: 235 s, GREEN). There is NO standing SKIP:
+`test_rpl_lua` needs a standalone `lua` (`brew install lua`; `bbh doctor` says
+whether one is found), and on a host without one its SKIP is a finding: the two
+replay parsers then go uncompared ([BBH-73]). This line is a FILED COUNT, so
+re-measure before quoting it.
 
-`selftest/test_rpl.sh` §4 and `test_rpl_lua.sh` §3 still parse the lineage's
-replays when its tree sits beside this one, located through the frozen
-`example/consumers/bbh.vampire.toml`. They are the last places bbh reads the
-lineage. A red there is first a question about the lineage's tree ([BBH-7]).
+No bbh gate reads the lineage's tree any more (since 2026-10-11).
 
 ## 4. Generated and locked artifacts
 
@@ -263,4 +262,4 @@ The rules that need no tooling hold everywhere:
 - Do not loosen a classifier, a threshold or an oracle class to turn a red green.
 - Do not make bbh depend on a consumer's tree, the lineage's included
   ([BBH-85]: found by `$BBH_HOME`, never a submodule).
-- Do not push with a red, or with a SKIP beyond the standing one.
+- Do not push with a red or a SKIP.

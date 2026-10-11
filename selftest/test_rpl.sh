@@ -1,10 +1,10 @@
 #!/bin/sh
 # test_rpl.sh — ground truth for lib/py/bbh/rpl.py, the .rpl grammar: every
 # example replay parses; each malformed shape is rejected with the lineage's
-# reason and the line number; a consumer vocabulary via --sides; and, when
-# the lineage tree is beside this one, EVERY replay it carries parses
-# (top level and subdirectories). ~2 s. Slice H6 adds the Lua twin and the
-# equality selftest.
+# reason and the line number; a consumer vocabulary via --sides. ~2 s.
+# Until 2026-10-11 it also parsed every replay the lineage tree carried when
+# that tree sat beside this one; removed when bbh became its own project
+# (docs/conventions.md 8). Slice H6 adds the Lua twin and the equality selftest.
 set -eu
 BBH_HOME="$(cd "$(dirname "$0")/.." && pwd)"; export BBH_HOME
 PYTHONPATH="$BBH_HOME/lib/py"; export PYTHONPATH
@@ -49,20 +49,6 @@ EOF
 printf '5 j1=AB\n' > "$T/c.rpl"
 o=$($R "$T/c.rpl" --sides j1:2:ABCD) && [ "$o" = "ok: 1 lines, last frame 5, 1 held frames" ] && ok "--sides: a consumer vocabulary (side j1, width 2, tokens AB/CD)" || fail "--sides: $o"
 $R "$T/c.rpl" >/dev/null 2>&1 && fail "the default vocabulary accepted side j1" || ok "…which the default vocabulary rejects"
-
-echo "== 4. the lineage's replays, when present =="
-CFG="$BBH_HOME/example/consumers/bbh.vampire.toml"
-V="$(python3 -m bbh.config "$CFG" root 2>/dev/null || true)"
-if [ -n "$V" ] && [ -d "$V/tests/replays" ]; then
-    n=0; badn=0
-    for f in "$V"/tests/replays/*.rpl "$V"/tests/replays/*/*.rpl; do
-        [ -f "$f" ] || continue
-        n=$((n + 1)); $R "$f" > /dev/null 2>&1 || { badn=$((badn + 1)); echo "        rejected: $f"; }
-    done
-    [ "$badn" = 0 ] && ok "every lineage replay parses ($n files, top level and subdirectories)" || fail "$badn of $n lineage replays rejected"
-else
-    echo "  (the lineage tree is not beside this one — its replays not parsed)"
-fi
 
 echo
 [ "$rc" = 0 ] && echo "PASS: the .rpl grammar" || { echo "FAIL: see above"; exit 1; }

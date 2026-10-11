@@ -38,14 +38,18 @@ ok "profile.lua's REQUIRED list agrees with this test's"
 echo "== 2. under a standalone lua: the loader loads each profile and refuses a broken one =="
 LUA=""; for l in lua lua5.4 lua5.3 luajit; do command -v "$l" >/dev/null 2>&1 && { LUA="$l"; break; }; done
 if [ -z "$LUA" ]; then
-    echo "  (not run: no standalone lua on this host — the loader is exercised under MAME by fidelity F8)"
+    echo "  (not run: no standalone lua on this host — the loader goes unexercised here; brew install lua)"
 else
     for p in "$L"/profiles/*.lua; do
         n="$(basename "$p")"
         o="$($LUA -e "local pr = dofile('$L/profile.lua'); local P = pr.load('$p'); pr.require_crash(P); print(P.name, #P.ports)" 2>&1)" \
             && ok "$n loads: $o" || fail "$n: $o"
     done
-    sed 's/^\s*ports\s*=.*$//' "$L/profiles/cps2.lua" > "$T/noports.lua"
+    # POSIX classes, never \s: BSD sed (macOS) reads \s as a literal s, and this
+    # control's copy then kept its ports line and loaded (found 2026-10-11, the
+    # first run of this section on a macOS host with a standalone lua)
+    sed -E 's/^[[:space:]]*ports[[:space:]]*=.*$//' "$L/profiles/cps2.lua" > "$T/noports.lua"
+    grep -qE '^[[:space:]]*ports[[:space:]]*=' "$T/noports.lua" && fail "the MUST-FIRE copy still carries its ports line: the perturbation did not apply"
     o="$($LUA -e "dofile('$L/profile.lua').load('$T/noports.lua')" 2>&1)" && fail "MUST-FIRE: a profile without 'ports' loaded" \
         || { printf '%s' "$o" | grep -q "missing required key 'ports'" && ok "MUST-FIRE: a profile missing 'ports' is refused by name" || fail "refusal text: $o"; }
     o="$($LUA -e "BBH_PROFILE=nil; dofile('$L/profile.lua').load()" 2>&1)" && fail "no BBH_PROFILE loaded something" \
