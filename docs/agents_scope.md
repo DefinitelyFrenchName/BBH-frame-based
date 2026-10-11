@@ -197,7 +197,7 @@ These are new to bbh:
 - **A session started in the lineage that edits bbh.** It runs under the LINEAGE's hooks, not these, which is the same caps in Phase A.
 - **Copy drift before F12.** Nothing here catches it (§4).
 
-## Appendix A — defects found while surveying (not fixed; offered as issues)
+## Appendix A — defects found while surveying (not fixed; FILED 2026-10-11 as #19, #20, #21, in this order)
 
 1. **`conventions 10` is cited in four places, but the register stops at 9.** The places are
    `docs/conventions.md:22`, `docs/rebaselines.md:4`, `selftest/test_fidelity_vampire.sh:71`, and,
