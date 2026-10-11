@@ -23,9 +23,9 @@
 # run ending in `wait`, `&&` chains), beside synthetic edge cases.
 #
 # Lineage: tests/test_agent_hooks.sh @ dbaed3a0 (GitHub #172 slices S1, S4),
-# ported 2026-10-07 (Phase A of docs/agents_scope.md). Not ported, by ruling R1:
-# the push hook, its ledger and its hint (the lineage's close binds bbh's push),
-# and the transcript census.
+# ported 2026-10-07 (Phase A of docs/agents_scope.md). Not ported: the push hook,
+# its ledger and its hint (R1; a bbh push gate is an open question since
+# 2026-10-11), and the transcript census.
 #
 # Usage: selftest/test_agent_hooks.sh
 set -eu

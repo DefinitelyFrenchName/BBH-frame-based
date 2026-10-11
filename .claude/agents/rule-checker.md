@@ -1,6 +1,6 @@
 ---
 name: rule-checker
-description: An independent, context-free checker for one prepared rule-checker packet. Spawn it only with a prompt file that the lineage's tools/rulecheck.py prepared (bbh keeps no rule-checker ledger of its own; the session record is the lineage's), passed verbatim, and never with a model parameter. It reads the files the prompt names and answers the prompt's fixed questions in the prompt's exact format.
+description: An independent, context-free checker for one prepared rule-checker packet. DORMANT in bbh: no packet producer exists here (docs/agents_scope.md R5), so do not spawn it until one is ruled in. When one exists, spawn it only with a prompt file that producer prepared, passed verbatim, and never with a model parameter. It reads the files the prompt names and answers the prompt's fixed questions in the prompt's exact format.
 model: claude-opus-5-5
 effort: high
 omitClaudeMd: true

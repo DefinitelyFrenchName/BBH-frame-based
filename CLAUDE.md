@@ -38,13 +38,12 @@ Its core is a verdict on a system the reader cannot see inside.
 The extraction is PROVED, never asserted ([BBH-81]): `selftest/test_fidelity_vampire.sh`
 runs the lineage's own tools and bbh's over the same input and diffs the verdict
 text, rows F1–F11. That is why bbh still carries the lineage's build names as
-defaults, and why it moves when the lineage moves (§5).
+defaults, and why a lineage freeze can turn it red (§5).
 
 **Siblings:**
 - **The lineage** never consumes bbh (`docs/conventions.md` 6, [BBH-66]); its
-  config lives here as `example/consumers/bbh.vampire.toml`. It reaches back in
-  through its own gate `tests/test_bbh_fidelity.sh`, which runs our fidelity test
-  with `BBH_FIDELITY_ROOT` set.
+  config lives here as `example/consumers/bbh.vampire.toml`. Since 2026-10-11 it is
+  a separate project: no commit, record or ruling crosses between the two.
 - **BBX** (`~/Developer/generalized-blackbox-harness/BBX`) generalizes bbh to any
   subject and uses bbh as its fidelity subject (`BBX_BBH_HOME`). A change here can
   move BBX's fidelity rows: say so in the commit when it might.
@@ -172,41 +171,62 @@ whole portable tier — never beside another gate in that tree), and
 - **The gate index is generated** from headers plus a family TSV (`bbh gate-index`,
   [BBH-57]) — in a consumer, and in `example/`.
 
-## 5. Working with the lineage
+## 5. Working in this project
 
-- **The session record is the LINEAGE's** (maintainer-ruled 2026-10-07). bbh keeps
-  no STATE or HANDOFF. A sitting that changes bbh records itself in the lineage's
-  `STATE.md` under its `14z-N` tag; a sitting begun here closes with a line there.
-  bbh's own durable record is its git log, `docs/conventions_history.md`,
-  `docs/rebaselines.md`, and this repository's GitHub issues.
-- **Citations.** Lifted comments and commits keep lineage incident citations
-  (`14z-N`, `GitHub #N`) as history; no lineage RULE ANCHOR (`[VSP-N]` and kin)
-  travels into this tree ([BBH-86]) — translate it into words.
-- **Issues.** A defect only in bbh is an issue on this repository. A defect in
-  BOTH copies is one lineage ticket that names both (the shape of lineage #140,
-  fixed here as `ca014d9`).
-- **Commits** go straight to `main` (there are no PRs here). Subject
-  `<area>: <what changed, in prose>` — areas seen: `config`, `selftest`,
-  `run-static`, `docs`, `README`, `rebaselines`, `consumer config`. The body gives
-  the cause, the fix, what is NOT claimed, and a `Verified:` line of tallies
-  measured in that sitting (e.g. the selftest tally, `check-skills ALL PASS`,
-  `skill-guide --check current`, the fidelity verdict). Cite the lineage sitting:
-  `(lineage 14z-N)`.
-- **The re-point.** When the lineage freezes a milestone, its current build
-  directories move one step and bbh must follow, or fidelity F4 goes red. The
-  lineage's own re-point sweep cannot see this repository, so the re-point is a
-  bbh commit of its own, `config: the M<N> re-point (lineage 14z-<S>) — …`,
-  touching four files: `lib/py/bbh/config.py` (the `[sweep]` placeholders and the
-  `[inp].build` default), `docs/config.md` (the documented `[inp].build` default),
-  `example/consumers/bbh.vampire.toml` (`[inp].build`, with its chained
-  re-pointed comment), `selftest/test_fidelity_vampire.sh` (F6's sampled build
-  dirs). Template: `git show 57d5c5c`.
-- **Push** only under the lineage's close rule, which governs bbh pushes too: the
-  selftest at its standing tally, `check-skills` ALL PASS, `skill-guide --check`
-  current, fidelity green when the lineage is present — and, for a fidelity-text
-  change, bbh pushed BEFORE the lineage ([BBH-83]). A red, an extra SKIP or an
-  unresolved item leaves the commits local, and the close says so. No hook in
-  this repository enforces the push rule (ruling R1); the lineage's close does.
+**bbh is its OWN PROJECT** (maintainer-ruled 2026-10-11). Its sessions begin
+and end here, and no commit comes from a Vampire Saved sitting. bbh does not rely
+on a record in the lineage, and the lineage does not rely on one here. This
+supersedes the 2026-10-07 ruling that put bbh's session record in the lineage.
+
+- **The record.** bbh keeps no STATE or HANDOFF. Its durable record is:
+  - its git log (the commit body is the session's account);
+  - `docs/conventions.md` with `docs/conventions_history.md`;
+  - `docs/rebaselines.md`;
+  - this repository's GitHub issues.
+
+  A ruling the maintainer gives in a sitting is recorded where it binds: in the
+  register (a dated row), in the page it changes, or in this file. It is quoted in
+  the commit that lands it.
+- **Citations.** Lifted comments keep lineage incident citations (`14z-N`,
+  `GitHub #N`) as HISTORY ([BBH-86]). No lineage RULE ANCHOR (`[VSP-N]` and kin)
+  travels into this tree; translate it into words. New commits cite bbh's own
+  issues (`#N`). A lineage incident is cited as `lineage #N` or `lineage 14z-N`,
+  and only as the source of a fact.
+- **Issues.** A bbh defect is an issue on THIS repository. Its body opens
+  `**Status:** filed, NOT started (maintainer, <date>: "…")`, then the defect, a
+  reproduction, and what a fix must hold. A defect that also exists in a
+  consumer's copy names that copy; the consumer's own ticket is the consumer's.
+- **Commits** go straight to `main` (there are no PRs here). Subject:
+  `<area>: <what changed, in prose>`. Areas seen: `config`, `selftest`,
+  `run-static`, `docs`, `README`, `rebaselines`, `consumer config`, `agents`.
+  The body gives the cause, the fix, what is NOT claimed, and a `Verified:` line of
+  tallies measured in that sitting: the selftest tally, `check-skills ALL PASS`,
+  `skill-guide --check current`, the fidelity verdict.
+- **The lineage is a fidelity INPUT, not a collaborator.** The fidelity test
+  reads its tree ([BBH-81], `docs/conventions.md` 6), and bbh carries its build
+  names as defaults. So when the lineage freezes a milestone and its current build
+  directories move one step, fidelity F4 goes red. The repair is a bbh re-point:
+  - one commit, `config: the M<N> re-point (lineage 14z-<S>) — …`;
+  - it touches four files: `lib/py/bbh/config.py` (the `[sweep]` placeholders and
+    the `[inp].build` default), `docs/config.md` (the documented `[inp].build`
+    default), `example/consumers/bbh.vampire.toml` (`[inp].build`, with its chained
+    re-pointed comment) and `selftest/test_fidelity_vampire.sh` (F6's sampled
+    build dirs);
+  - template: `git show 57d5c5c`.
+- **Push** when every check is green: the selftest at its standing tally,
+  `check-skills` ALL PASS, `skill-guide --check` current, and fidelity green when
+  the lineage is present. A red, an extra SKIP or an unresolved item leaves the
+  commits local, and the session's last message says so. One exception, and only
+  with the maintainer's word: a fidelity red caused by the LINEAGE moving, shown by
+  bbh's code (`bin lib lua drivers example`) being unchanged since a commit at
+  which fidelity was green. The commit body must name the failing rows and the
+  lineage change behind each. Precedent, 2026-10-11, with bbh unchanged since
+  `57d5c5c`:
+  - F1, the lineage classifier's new `(exit N)` CONTROL DIED text;
+  - F3a–F3c, its two unregistered `audit_release_linux_*` gates;
+  - F4, its ONDEMAND scope, from lineage `8904dde2`. No hook enforces the push rule here: R1's reason
+  (the lineage's close binds bbh's push) is gone, and a push gate is an open
+  question (`docs/agents_scope.md` R1).
 
 ## 6. Agents
 
@@ -221,9 +241,10 @@ names its source.
   TASK (a question), INPUTS (pinned), COMMANDS, RETURN, MUST NOT, STOP. Call them
   with NO `model` parameter; their definition is the cap of record.
 - **The rule-checker** (`.claude/agents/rule-checker.md`, pinned model,
-  `omitClaudeMd: true`) is spawned only with a packet that the LINEAGE's
-  `tools/rulecheck.py` prepared. The ledger is the lineage's, like the session
-  record (ruling 1). Hand its verdict to the maintainer verbatim.
+  `omitClaudeMd: true`) is DORMANT. bbh has no packet producer and no ledger of
+  its own, and since 2026-10-11 it may not borrow the lineage's. Do not spawn it
+  until one is ruled in (`docs/agents_scope.md` R5). When it runs, hand its
+  verdict to the maintainer verbatim.
 - **The hooks** (`.claude/agent/hooks/`): `pre_bash.py` denies a detached job
   (`nohup`, `setsid`, `disown`, a trailing `&` with no `wait`) and a `pgrep`
   waiter loop, so use `run_in_background` or Monitor. `pre_agent.py` denies:
@@ -244,7 +265,7 @@ names its source.
   `selftest/test_agent_hooks.sh` (the hooks against their frozen fixture and
   cases, and the installation). They are the only proof that the fail-open hooks
   still decide anything.
-- **No push hook here** (ruling R1). The lineage's close binds bbh's push (§5).
+- **No push hook here.** The push rule is §5's, held by the session, not by a hook.
 
 The rules that need no tooling hold everywhere:
 - Every figure you quote comes from a command run in THIS sitting. A figure from a

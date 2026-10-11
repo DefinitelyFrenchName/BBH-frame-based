@@ -10,7 +10,7 @@
 > lineage's working tree at `dbaed3a0` and this repository at `57d5c5c`.
 
 **Already ruled (maintainer, 2026-10-07, at the plan stage of this page):**
-1. **The session record is the lineage's.** bbh gets no STATE.md or HANDOFF.md.
+1. ~~**The session record is the lineage's.**~~ **SUPERSEDED 2026-10-11:** *"ruling 1 is obsolete since bbh is now its own project, it shouldn't rely on a line in Vampire Saved and vice-versa"*. bbh's record is its own (git log, the register and its twin, `rebaselines.md`, GitHub issues; `CLAUDE.md` §5), and it still has no STATE.md or HANDOFF.md.
 2. **A dev setup now, then a lift later.** Phase A is bbh's own `.claude/` (§4).
    Phase B lifts the deterministic pieces into the product, proved by fidelity (§5).
 3. **This page is the proposal**, left uncommitted for review.
@@ -126,7 +126,7 @@ Phase A therefore comes first: bbh's own `.claude/` is the SECOND instance that 
 |---|---|---|
 | `.claude/agents/measurer.md` | copy; spec path re-pointed | lineage `.claude/agents/measurer.md` @ `dbaed3a0` |
 | `.claude/agents/reader.md` | copy; spec path re-pointed | lineage `.claude/agents/reader.md` |
-| `.claude/agents/rule-checker.md` | copy, verbatim (pinned model id, `omitClaudeMd: true`) | lineage; driven by the LINEAGE's `tools/rulecheck.py`, because the session record and its ledger are the lineage's (ruling 1) |
+| `.claude/agents/rule-checker.md` | copy, verbatim (pinned model id, `omitClaudeMd: true`) | lineage. Built to be driven by the lineage's `tools/rulecheck.py` under ruling 1; **DORMANT since 2026-10-11**, when ruling 1 was superseded: bbh has no packet producer of its own (R5) |
 | `.claude/worker_spec.md` | the template; lineage-only notes cut | lineage `docs/project/worker_spec.md` |
 | `.claude/agent/agentlib.py`, `agent_defs.py`, `hooks/pre_bash.py`, `hooks/pre_agent.py` | copies in the lineage's own layout (R2 as amended), each carrying a `COPIED INTO bbh … @ dbaed3a0` paragraph; `TEMPLATE` re-pointed | lineage `tools/agent/` |
 | `.claude/settings.json` | the two hooks, plus `permissions.deny` on `Edit(.claude/settings.json)`, `Edit(.claude/agent/hooks/**)` and `Edit(.claude/agent/agentlib.py)`. **NOT WRITTEN:** the agent's attempt was refused as self-modification (2026-10-07), and the content is handed to the maintainer to install | lineage `.claude/settings.json` |
@@ -137,7 +137,7 @@ Phase A therefore comes first: bbh's own `.claude/` is the SECOND instance that 
 - **Copy drift.** The copies and the lineage's can diverge silently until Phase B's F12 proves them equal. Each header names the lineage commit it was taken from, so `git diff <sha> HEAD -- tools/agent` in the lineage shows what moved.
 - **The settings file needs the maintainer.** It is maintainer-installed, as in the lineage, and an agent cannot edit it once the deny rule exists. The first install is the maintainer's act.
 - **The selftest tally moves.** Two new gates take it from 34 to 36 tests, and the standing tally from PASS 32 to PASS 34. The only place that quoted it, `CLAUDE.md` §3, was found by grep and updated ([BBH-8]).
-- **No `sweep.py` or `transcript_gaps.py` in Phase A.** The close that runs them is the lineage's (ruling 1).
+- **No `sweep.py` or `transcript_gaps.py` in Phase A.** The close that ran them was the lineage's (ruling 1). Since 2026-10-11 bbh has its own close, so whether it needs them is an open question, folded into R1's reopening.
 
 ## 5. Phase B — the lift (proposed; after Phase A has run)
 
@@ -165,7 +165,8 @@ Phase A therefore comes first: bbh's own `.claude/` is the SECOND instance that 
 ## 6. Open rulings — each with a recommendation
 
 - **R1 — The push gate in Phase A.**
-  - **Recommended:** no bbh push hook. The lineage's close binds bbh pushes, as it does today, and CLAUDE.md §5 says so.
+  - **REOPENED 2026-10-11.** Its reason (the lineage's close binds bbh's push) went with ruling 1. Today the push rule (`CLAUDE.md` §5) is held by the session alone. The declined alternative below is the candidate if a mechanical gate is wanted.
+  - **Recommended (2026-10-07):** no bbh push hook. The lineage's close binds bbh pushes, as it does today, and CLAUDE.md §5 says so.
   - Alternative: a bbh `pre_push.py` that denies `git push` unless a selftest run at HEAD recorded the standing tally. Declined for Phase A: it invents a ledger bbh does not have, and ruling 1 put the record in the lineage.
 - **R2 — Where the dev copies live.**
   - **Recommended:** `.claude/hooks/` and `.claude/worker_spec.md`. They sit outside every product directory, so no consumer mistakes them for bbh.
